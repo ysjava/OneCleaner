@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">ONE Cleaner</string>
+    <string name="Clean">Clean</string>
+    <string name="loading_0">Loading…0%</string>
+    <string name="clean_1_24gb">Clean 1.24GB</string>
+    <string name="junk_clean">Junk Clean</string>
+    <string name="_0b">0B</string>
+    <string name="scan_garbage">Scan garbage</string>
+    <string name="system_cache">System Cache</string>
+    <string name="residual_junks">Residual junks</string>
+    <string name="ad_junks">Ad junks</string>
+    <string name="obsolete_apk">Obsolete Apk</string>
+    <string name="thumb_photo">Thumb photo</string>
+    <string name="temp_files">Temp Files</string>
+    <string name="clean_memory">Clean Memory</string>
+    <string name="optimizing">Optimizing …</string>
+
+    <string name="phone_booster">Phone Booster</string>
+    <string name="battery_saver">Battery Saver</string>
+    <string name="cpu_cooler">CPU Cooler</string>
+    <string name="cleaning...">Cleaning …</string>
+    <string name="accelerating...">Accelerating …</string>
+    <string name="optimizing...">Optimizing …</string>
+    <string name="cooling...">Cooling …</string>
+    <string name="scanning...">Scanning …</string>
+    <string name="complete">Complete</string>
+    <string name="accelerated_success">\n Accelerated success</string>
+    <string name="accelerated_use_experience">Accelerated use experience</string>
+    <string name="repair_battery">Repair battery</string>
+    <string name="cooling_down">Cooling down</string>
+    <string name="acceleration">Acceleration</string>
+    <string name="clean_main">CLEAN</string>
+    <string name="speed_up_your_phone">Speed up your phone</string>
+    <string name="boom_beach">Boom Beach</string>
+    <string name="start_building_your_all_is...">Start building your all is…</string>
+    <string name="install">Install</string>
+    <string name="allow_fast_clean_accesses_apps_data_and_document_to_remove_junk">Allow Fast Clean accesses \napps data and document to \nremove junk.</string>
+    <string name="file_access_permission">File Access Permission</string>
+    <string name="go">GO</string>
+    <string name="loading...">Loading…</string>
+    <string name="clean">Clean</string>
+    <string name="cooler">Cooler</string>
+    <string name="saver">Saver</string>
+    <string name="booster">Booster</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="share">Share</string>
+    <string name="rating_us">Rating Us</string>
+    <string name="privacy_policy_title">This is where we break down what you\'re allowed, and not allowed to do with the apps and websites created by SafeVPN. The following text outlines the terms of use of the SafeVPN applications and website. You can also review our privacy policy, which outlines our practices towards handling any personal information that you may provide to us.</string>
+    <string name="privacy_policy_2_content">SafeVPN provides The Client with a limited, personal license intended for use only as set forth in this agreement for personal, non commercial, private and limited non transferable uses. Any and all intellectual property rights on SafeVPN are owned by SafeVPN and are protected by US International copyright, patent and relevant trademark laws protecting intellectual property and proprietary rights. You may not reproduce, copy, or download any content from SafeVPN without the express written authorization to first do so. Commercial use without prior consent is prohibited. The Client agrees not to alter, delete, obscure, or change any proprietary rights affiliated with SafeVPN content. Client rights are subject to these Terms of Services and New or future services may require an additional subscription or agreement. The Client fully understands and agrees that these terms are limited to VPN, Proxy and Email services.</string>
+    <string name="privacy_policy_1_content">By visiting SafeVPN\'s website or using the provided service (Including but not limited to all services and pages available on SafeVPN’s website) The Client fully agrees and understands the terms and conditions provided herein, SafeVPN’s Privacy Policy, DMCA (Digital Millennium Copyright Act) and all future modifications or amendments to this agreement. By entering our website and/or purchasing services, The Client agrees to be bound by these Terms and conditions. If for any reason The Client does not agree to be bound by these Terms and Conditions, Privacy Policy and DMCA policy, then access to SafeVPN’s website and it\'s services is strictly prohibited.</string>
+    <string name="privacy_policy_1_title">1.ACCEPTANCE</string>
+    <string name="privacy_policy_2_title">2.LICENSE</string>
+
+
+</resources>

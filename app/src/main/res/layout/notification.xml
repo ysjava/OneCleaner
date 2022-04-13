@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_notification"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/dp_20"
+    tools:ignore="RtlSymmetry,UseCompatTextViewDrawableXml"
+    android:paddingVertical="@dimen/dp_12">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_32"
+        android:background="@drawable/bg_notification_main"
+        android:src="@drawable/ic_notification_main"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_clean"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_clean_32dp"
+        android:gravity="center"
+        android:text="@string/clean"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12" />
+
+    <TextView
+        android:id="@+id/tv_booster"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_booster_32dp"
+        android:gravity="center"
+        android:text="@string/booster"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12" />
+
+    <TextView
+        android:id="@+id/tv_saver"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_saver_32dp"
+        android:gravity="center"
+        android:text="@string/saver"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12" />
+
+    <TextView
+        android:id="@+id/tv_cooler"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_cooler_32dp"
+        android:gravity="center"
+        android:text="@string/cooler"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12" />
+
+
+</LinearLayout>
