@@ -13,6 +13,7 @@ import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.utils.dp2px
+import com.oneclean.android.booster.utils.logd
 import kotlin.math.max
 
 
@@ -60,7 +61,7 @@ class ScanLoadingView @JvmOverloads constructor(
     private var bounds = Rect()
     private val drawables =
         intArrayOf(R.drawable.ic_scanning_status_selected, R.drawable.ic_scanning_status_deselect)
-
+    private var animator: ObjectAnimator
     init {
         val animator = ObjectAnimator.ofFloat(this, "startAngle", 0f, 360f)
         animator.duration = 600
@@ -68,6 +69,7 @@ class ScanLoadingView @JvmOverloads constructor(
         animator.repeatMode = ValueAnimator.RESTART
         animator.interpolator = LinearInterpolator()
         animator.start()
+        this.animator = animator
 
         val strokeWidth = dp2px(1.5f, context)
         defHeight = dp2px(40f, context)
@@ -202,6 +204,11 @@ class ScanLoadingView @JvmOverloads constructor(
         val aSize = max(0L, size)
         enable = aSize > 0L
         loadingStatus = if (aSize > 0) LOADED else UNCHECK
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        animator.cancel()
     }
 
     interface StatusChangedListener {

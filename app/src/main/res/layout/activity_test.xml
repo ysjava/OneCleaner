@@ -6,17 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.base.TestActivity">
 
+
     <Button
-        android:id="@+id/button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
+        android:id="@+id/button"/>
 </FrameLayout>

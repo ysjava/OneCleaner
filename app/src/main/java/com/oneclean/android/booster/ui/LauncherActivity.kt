@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import com.oneclean.android.booster.R
-import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.home.HomeActivity
 
 class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {

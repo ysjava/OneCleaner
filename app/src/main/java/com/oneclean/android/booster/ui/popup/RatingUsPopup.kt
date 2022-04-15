@@ -1,6 +1,8 @@
 package com.oneclean.android.booster.ui.popup
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -15,7 +17,13 @@ class RatingUsPopup(context: Context) : CenterPopupView(context) {
     override fun onCreate() {
         super.onCreate()
         findViewById<TextView>(R.id.tv_sure).setOnClickListener {
-            Toast.makeText(context, "感谢评价！", Toast.LENGTH_SHORT).show()
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(
+                    "https://play.google.com/store/apps/details?id=com.example.android")
+                setPackage("com.android.vending")
+            }
+            context.startActivity(intent)
+
             delayDismiss(300)
         }
 

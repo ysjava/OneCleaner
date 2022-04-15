@@ -101,6 +101,37 @@
             android:paddingHorizontal="@dimen/dp_20">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_junk_clean"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_94"
+                android:layout_weight="1"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_0">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:src="@drawable/ic_junk_clean" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dp_28"
+                    android:text="@string/junk_clean"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp_14" />
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <View
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_1" />
+
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_phone_booster"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_94"
@@ -124,10 +155,13 @@
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_14" />
             </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
-            <View
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/dp_20">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_battery_saver"
@@ -153,13 +187,11 @@
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_14" />
             </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/dp_20">
+
+            <View
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_1" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_cpu_cooler"
@@ -182,35 +214,6 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_28"
                     android:text="@string/cpu_cooler"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14" />
-            </com.google.android.material.card.MaterialCardView>
-
-            <View
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_1" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_junk_clean"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_94"
-                android:layout_weight="1"
-                app:cardCornerRadius="@dimen/dp_10"
-                app:cardElevation="@dimen/dp_0">
-
-                <ImageView
-                    android:layout_width="@dimen/dp_36"
-                    android:layout_height="@dimen/dp_36"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:src="@drawable/ic_junk_clean" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dp_28"
-                    android:text="@string/junk_clean"
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_14" />
             </com.google.android.material.card.MaterialCardView>
@@ -386,7 +389,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_26"
             android:layout_marginBottom="@dimen/dp_70"
-            android:text="V1.0.0"
+            android:text="@string/v1_0_0"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
     </LinearLayout>

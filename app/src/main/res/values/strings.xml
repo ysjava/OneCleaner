@@ -4,14 +4,13 @@
     <string name="loading_0">Loading…0%</string>
     <string name="clean_1_24gb">Clean 1.24GB</string>
     <string name="junk_clean">Junk Clean</string>
-    <string name="_0b">0B</string>
+    <string name="_0b">0 B</string>
     <string name="scan_garbage">Scan garbage</string>
     <string name="system_cache">System Cache</string>
     <string name="residual_junks">Residual junks</string>
     <string name="ad_junks">Ad junks</string>
     <string name="obsolete_apk">Obsolete Apk</string>
     <string name="thumb_photo">Thumb photo</string>
-    <string name="temp_files">Temp Files</string>
     <string name="clean_memory">Clean Memory</string>
     <string name="optimizing">Optimizing …</string>
 
@@ -23,7 +22,6 @@
     <string name="optimizing...">Optimizing …</string>
     <string name="cooling...">Cooling …</string>
     <string name="scanning...">Scanning …</string>
-    <string name="complete">Complete</string>
     <string name="accelerated_success">\n Accelerated success</string>
     <string name="accelerated_use_experience">Accelerated use experience</string>
     <string name="repair_battery">Repair battery</string>
@@ -50,6 +48,22 @@
     <string name="privacy_policy_1_content">By visiting SafeVPN\'s website or using the provided service (Including but not limited to all services and pages available on SafeVPN’s website) The Client fully agrees and understands the terms and conditions provided herein, SafeVPN’s Privacy Policy, DMCA (Digital Millennium Copyright Act) and all future modifications or amendments to this agreement. By entering our website and/or purchasing services, The Client agrees to be bound by these Terms and conditions. If for any reason The Client does not agree to be bound by these Terms and Conditions, Privacy Policy and DMCA policy, then access to SafeVPN’s website and it\'s services is strictly prohibited.</string>
     <string name="privacy_policy_1_title">1.ACCEPTANCE</string>
     <string name="privacy_policy_2_title">2.LICENSE</string>
+    <string name="residual_junk">Residual Junk</string>
+    <string name="temp_files">Temp Files</string>
+    <string name="deep_clean_junk">Deep Clean Junk</string>
+    <string name="system_junk">System Junk</string>
+    <string name="obsolete_files">Obsolete Files</string>
+    <string name="apk_junk">APK Junk</string>
+    <string name="optimize_your_cpu_consuming_and_cool_your_phone">Optimize your cpu consuming and cool your phone.</string>
+    <string name="cool_now">Cool Now</string>
+    <string name="super_speed_up_your_phone">Super speed up your phone.</string>
+    <string name="speed_up">Speed up</string>
+    <string name="clean_now">Clean now</string>
+    <string name="junk_need_to_be_clean">Junk need to be clean</string>
+    <string name="save_now">Save now</string>
+    <string name="battery_saving_master_save_phone_battery">Battery saving master save phone Battery.</string>
+    <string name="complete">Complete</string>
+    <string name="v1_0_0">V1.0.0</string>
 
 
 </resources>

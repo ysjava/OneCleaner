@@ -4,12 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
 import androidx.lifecycle.ViewModelProvider
 import com.hi.dhl.binding.viewbind
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityJunkCleanBinding
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
+import com.oneclean.android.booster.utils.logd
 import com.oneclean.android.booster.widget.ScanLoadingView
 
 class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
@@ -36,13 +40,12 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
 
     private fun initView() {
         binding.apply {
-            slvSystemCache.setStatusChangedListener(this@JunkCleanActivity)
-            slvResidualJunks.setStatusChangedListener(this@JunkCleanActivity)
-            slvAdJunks.setStatusChangedListener(this@JunkCleanActivity)
-            slvObsoleteApk.setStatusChangedListener(this@JunkCleanActivity)
-            slvThumbPhoto.setStatusChangedListener(this@JunkCleanActivity)
+            slvSystemJunk.setStatusChangedListener(this@JunkCleanActivity)
+            slvObsoleteFiles.setStatusChangedListener(this@JunkCleanActivity)
+            slvApkJunk.setStatusChangedListener(this@JunkCleanActivity)
+            slvResidualJunk.setStatusChangedListener(this@JunkCleanActivity)
             slvTempFiles.setStatusChangedListener(this@JunkCleanActivity)
-            slvCleanMemory.setStatusChangedListener(this@JunkCleanActivity)
+            slvDeepCleanJunk.setStatusChangedListener(this@JunkCleanActivity)
 
             tvClean.setOnClickListener {
                 //开启清理动画
@@ -59,19 +62,25 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
     private fun initObserve() {
         viewModel.apply {
             totalSize.observe(this@JunkCleanActivity) {
-                binding.tvTotalSize.text = it
-                val str = getString(R.string.clean) + it
+                val index = it.indexOf(" ")
+
+                val spannable = SpannableString(it)
+                spannable.setSpan(RelativeSizeSpan(0.4F),index,it.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+
+                binding.tvTotalSize.text = spannable
+                val str = "Clean  $it"
                 binding.tvClean.text = str
             }
-            keySystemCache.observe(this@JunkCleanActivity) { binding.slvSystemCache.number = it }
-            keyResidualJunks.observe(this@JunkCleanActivity) {
-                binding.slvResidualJunks.number = it
+            keySystemJunk.observe(this@JunkCleanActivity) { binding.slvSystemJunk.number = it }
+            keyObsoleteFiles.observe(this@JunkCleanActivity) {
+                binding.slvObsoleteFiles.number = it
             }
-            keyAdJunks.observe(this@JunkCleanActivity) { binding.slvAdJunks.number = it }
-            keyObsoleteApk.observe(this@JunkCleanActivity) { binding.slvObsoleteApk.number = it }
-            keyThumbPhoto.observe(this@JunkCleanActivity) { binding.slvThumbPhoto.number = it }
+            keyApkJunk.observe(this@JunkCleanActivity) { binding.slvApkJunk.number = it }
+            keyResidualJunk.observe(this@JunkCleanActivity) { binding.slvResidualJunk.number = it }
             keyTempFiles.observe(this@JunkCleanActivity) { binding.slvTempFiles.number = it }
-            keyCleanMemory.observe(this@JunkCleanActivity) { binding.slvCleanMemory.number = it }
+            keyDeepCleanJunk.observe(this@JunkCleanActivity) {
+                binding.slvDeepCleanJunk.number = it
+            }
 
             handleStatus.observe(this@JunkCleanActivity) {
                 when (it) {
@@ -88,54 +97,52 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
             viewModel.typeSizeMap.forEach {
                 binding.apply {
                     when (it.key) {
-                        "SystemCache" -> {
-                            slvSystemCache.notifyStatusChangeBySize(it.value)
+                        "SystemJunk" -> {
+                            slvSystemJunk.notifyStatusChangeBySize(it.value)
                         }
-                        "ResidualJunks" -> {
-                            slvResidualJunks.notifyStatusChangeBySize(it.value)
+                        "ObsoleteFiles" -> {
+                            slvObsoleteFiles.notifyStatusChangeBySize(it.value)
                         }
-                        "AdJunks" -> {
-                            slvAdJunks.notifyStatusChangeBySize(it.value)
+                        "ApkJunk" -> {
+                            slvApkJunk.notifyStatusChangeBySize(it.value)
                         }
-                        "ObsoleteApk" -> {
-                            slvObsoleteApk.notifyStatusChangeBySize(it.value)
-                        }
-                        "ThumbPhoto" -> {
-                            slvThumbPhoto.notifyStatusChangeBySize(it.value)
+                        "ResidualJunk" -> {
+                            slvResidualJunk.notifyStatusChangeBySize(it.value)
                         }
                         "TempFiles" -> {
                             slvTempFiles.notifyStatusChangeBySize(it.value)
                         }
-                        "CleanMemory" -> {
-                            slvCleanMemory.notifyStatusChangeBySize(it.value)
+                        "DeepCleanJunk" -> {
+                            slvDeepCleanJunk.notifyStatusChangeBySize(it.value)
                         }
                     }
                 }
             }
+            val str = viewModel.totalSize.value + "  Junk Scanned"
+            binding.tvSecond.text = str
+            //假数据不会参与到真实的垃圾集合中，只是一个显示效果，所以，需要动态的去改变状态
+            binding.slvDeepCleanJunk.notifyStatusChangeBySize(viewModel.backFakeDataSize)
         } else {
             viewModel.keys.forEach {
                 binding.apply {
                     when (it) {
-                        "SystemCache" -> {
-                            slvSystemCache.notifyStatusChangeBySize(0)
+                        "SystemJunk" -> {
+                            slvSystemJunk.notifyStatusChangeBySize(0)
                         }
-                        "ResidualJunks" -> {
-                            slvResidualJunks.notifyStatusChangeBySize(0)
+                        "ObsoleteFiles" -> {
+                            slvObsoleteFiles.notifyStatusChangeBySize(0)
                         }
-                        "AdJunks" -> {
-                            slvAdJunks.notifyStatusChangeBySize(0)
+                        "ApkJunk" -> {
+                            slvApkJunk.notifyStatusChangeBySize(0)
                         }
-                        "ObsoleteApk" -> {
-                            slvObsoleteApk.notifyStatusChangeBySize(0)
-                        }
-                        "ThumbPhoto" -> {
-                            slvThumbPhoto.notifyStatusChangeBySize(0)
+                        "ResidualJunk" -> {
+                            slvResidualJunk.notifyStatusChangeBySize(0)
                         }
                         "TempFiles" -> {
                             slvTempFiles.notifyStatusChangeBySize(0)
                         }
-                        "CleanMemory" -> {
-                            slvCleanMemory.notifyStatusChangeBySize(0)
+                        "DeepCleanJunk" -> {
+                            slvDeepCleanJunk.notifyStatusChangeBySize(0)
                         }
                     }
                 }
@@ -147,20 +154,19 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
 
     private fun cleanBtnRefresh() {
         val str1 = binding.tvTotalSize.text
-        val str2 = getString(R.string.clean) + str1
+        val str2 = "Clean  $str1"
         binding.tvClean.text = str2
-        binding.tvClean.isEnabled = viewModel.fileMap.isNotEmpty()
+        binding.tvClean.isEnabled = viewModel.fileMap.isNotEmpty() || binding.slvDeepCleanJunk.loadingStatus == ScanLoadingView.LOADED
     }
 
     override fun changed(isChecked: Boolean, id: Int) {
         val type = when (id) {
-            R.id.slv_system_cache -> "SystemCache"
-            R.id.slv_residual_junks -> "ResidualJunks"
-            R.id.slv_ad_junks -> "AdJunks"
-            R.id.slv_obsolete_apk -> "ObsoleteApk"
-            R.id.slv_thumb_photo -> "ThumbPhoto"
+            R.id.slv_system_junk -> "SystemJunk"
+            R.id.slv_obsolete_files -> "ObsoleteFiles"
+            R.id.slv_apk_junk -> "ApkJunk"
+            R.id.slv_residual_junk -> "ResidualJunk"
             R.id.slv_temp_files -> "TempFiles"
-            R.id.slv_clean_memory -> "CleanMemory"
+            R.id.slv_deep_clean_junk -> "DeepCleanJunk"
             else -> ""
         }
 

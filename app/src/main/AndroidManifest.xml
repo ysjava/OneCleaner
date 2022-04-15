@@ -25,7 +25,7 @@
         tools:targetApi="r">
         <activity
             android:name=".ui.base.TestActivity"
-            android:exported="true" >
+            android:exported="true">
 
         </activity>
         <activity
@@ -42,8 +42,10 @@
             android:exported="true" />
         <activity
             android:name=".ui.LauncherActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Launcher"
-            android:exported="true">
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

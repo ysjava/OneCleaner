@@ -12,4 +12,9 @@
     <color name="cleaned">#2FD9C8</color>
     <color name="scanning_size">#999999</color>
     <color name="transparent">#00FFFFFF</color>
+
+
+    <color name="home_btn_red">#E0FF2D2E</color>
+    <color name="home_btn_pink">#E0FF0069</color>
+    <color name="home_btn_orange">#E0FF6A2D</color>
 </resources>

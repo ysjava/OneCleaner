@@ -9,6 +9,7 @@ import androidx.core.widget.NestedScrollView
 import com.hi.dhl.binding.viewbind
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityCleanedBinding
+import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
@@ -18,17 +19,18 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
     private val binding: ActivityCleanedBinding by viewbind()
 
     companion object {
-        fun startActivity(packageContext: Context, cleanType: Int) {
+        fun startActivity(packageContext: Context, cleanTypeValue: Int) {
             val intent = Intent(packageContext, CleanedActivity::class.java)
-            intent.putExtra("CleanType", cleanType)
+            intent.putExtra("CleanTypeValue", cleanTypeValue)
             packageContext.startActivity(intent)
         }
     }
 
-    private var cleanType = -1
+    private var cleanType = CleanType.NOTHING
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cleanType = intent.getIntExtra("CleanType", -1)
+        val value = intent.getIntExtra("CleanTypeValue", -1)
+        cleanType = CleanType.switchToTypeByValue(value)
         initView()
 
         binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
@@ -37,11 +39,15 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
 
         binding.apply {
             when (cleanType) {
-                0 -> layJunk.visibility = View.GONE
-                1 -> layBooster.visibility = View.GONE
-                2 -> layBattery.visibility = View.GONE
-                3 -> layCpu.visibility = View.GONE
+                CleanType.CLEAN -> layJunk.visibility = View.GONE
+                CleanType.BOOSTER -> layBooster.visibility = View.GONE
+                CleanType.SAVER -> layBattery.visibility = View.GONE
+                CleanType.COOLER -> layCpu.visibility = View.GONE
+                CleanType.NOTHING -> {}
             }
+            val centerNames =
+                arrayOf("\nJunk Cleaned", "\nPhone Boosted", "\nBattery Saved", "\nCPU Cooled")
+            tvCenterName.text = centerNames[cleanType.value]
         }
     }
 
@@ -52,7 +58,7 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
             tvCleanBattery.setOnClickListener(this@CleanedActivity)
             tvCleanCpu.setOnClickListener(this@CleanedActivity)
             ivBack.setOnClickListener { finish() }
-            tvTitle.text = getTitleText(cleanType)
+            tvTitle.text = getTitleText(cleanType.value)
         }
     }
 

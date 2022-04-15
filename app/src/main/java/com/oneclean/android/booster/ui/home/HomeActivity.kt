@@ -19,7 +19,7 @@ import com.hi.dhl.binding.viewbind
 import com.lxj.xpopup.XPopup
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityHomeBinding
-import com.oneclean.android.booster.ui.PrivacyPolicyActivity
+import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
@@ -30,11 +30,11 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     private val binding: ActivityHomeBinding by viewbind()
 
     //Junk Clean-> Phone Booster-> Battery Saver-> CPU Cooler
-    /**当前已清理类型的位置 -1即一个没清理*/
-    private var index = -1
+    /**当前已清理类型 默认未清理*/
+    private var cleanedType = CleanType.NOTHING
 
     /**当前主按钮显示的清理类别  index对应cleanTypes  默认主页显示的第一个清理类别*/
-    private var curHomeBtnShowIndex = 0
+    private var curHomeBtnShowIndex = CleanType.CLEAN
 
     companion object {
         const val BROADCAST_ACTION_DISC = "nnsmanys0098"
@@ -53,6 +53,12 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         R.drawable.ic_cpu_cooler_un
     )
 
+    private val homeBtnStyleGroup = arrayOf(
+        Pair(R.drawable.ic_home_circle_in_red, R.color.home_btn_red),
+        Pair(R.drawable.ic_home_circle_in_orange, R.color.home_btn_orange),
+        Pair(R.drawable.ic_home_circle_in_pink, R.color.home_btn_pink)
+    )
+
     /**清理的类别*/
     private val cleanTypeStrArray = arrayOf("CLEAN", "BOOSTER", "SAVER", "COOLER")
     val cleanTypes = mutableListOf<Clean>()
@@ -65,21 +71,22 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         //Junk Clean-> Phone Booster-> Battery Saver-> CPU Cooler
 
         binding.ivHomeOuterCircle.setOnClickListener {
-            requestPermission(reqSuccess, reqFail)
+            temp = 1
+            requestPermission(reqSuccess, reqFail, by11RequestFail)
         }
+
         initAnimation()
     }
 
     /**为了让点击页面下方四个按钮能权限验证完成后，能正常的执行跳转*/
-    private var requestPermissionIndex = -1
+    private var requestPermissionIndex = CleanType.NOTHING
 
     private fun initView() {
-
         binding.apply {
-            cvPhoneBooster.setOnClickListener { performStartActivity(1) }
-            cvBatterySaver.setOnClickListener { performStartActivity(2) }
-            cvCpuCooler.setOnClickListener { performStartActivity(3) }
-            cvJunkClean.setOnClickListener { performStartActivity(0) }
+            cvPhoneBooster.setOnClickListener { performStartActivity(CleanType.BOOSTER) }
+            cvBatterySaver.setOnClickListener { performStartActivity(CleanType.SAVER) }
+            cvCpuCooler.setOnClickListener { performStartActivity(CleanType.COOLER) }
+            cvJunkClean.setOnClickListener { performStartActivity(CleanType.CLEAN) }
             ivDrawer.setOnClickListener { layDrawer.openDrawer(GravityCompat.START) }
             ivClose.setOnClickListener { layDrawer.close() }
             cvRatingUs.setOnClickListener {
@@ -89,25 +96,32 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
                 layDrawer.closeDrawer(GravityCompat.START, false)
             }
-            cvShare.setOnClickListener { }
+            cvShare.setOnClickListener {
+                val intent = Intent()
+                intent.action = Intent.ACTION_SEND
+                intent.putExtra(Intent.EXTRA_TEXT, "文本内容")
+                intent.type = "text/plain"
+                startActivity(intent)
+            }
             cvPrivacyPolicy.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@HomeActivity,
-                        PrivacyPolicyActivity::class.java
-                    )
-                )
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://onecleanerr.com/policy")
+                }
+                layDrawer.close()
+                startActivity(intent)
             }
         }
     }
 
     /**
      * 点击主页下方四个按钮的启动activity，这时候还没启动，先做权限验证
-     * @param index 清理类型的位置  0-3  对应 cleanTypeStrArray
+     * @param type 清理类型的位置  0-3  对应 cleanTypeStrArray
      * */
-    private fun performStartActivity(index: Int) {
-        requestPermissionIndex = index
-        requestPermission(reqSuccess, reqFail)
+    private fun performStartActivity(type: CleanType) {
+        temp = 1
+        requestPermissionIndex = type
+        requestPermission(reqSuccess, reqFail,by11RequestFail)
     }
 
     /**启动activity*/
@@ -119,6 +133,20 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     /**未得到权限执行*/
     private val reqFail: (deniedList: List<String>) -> Unit = {
         Toast.makeText(this, "需要你同意权限获取", Toast.LENGTH_SHORT).show()
+    }
+
+    /**防止重复去做StorageManager权限请求*/
+    private var temp = 1
+    private val by11RequestFail = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (temp == 1) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                val uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startForResult.launch(intent)
+                temp = 0
+            }
+        }
     }
 
     /**成功得到权限执行*/
@@ -141,16 +169,16 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         val index = requestPermissionIndex
         val curIndex = curHomeBtnShowIndex
         //requestPermissionIndex（index） > -1 则表示执行该方法的是页面下方的四个按钮点击
-        val b = index > -1
-        if (b || curIndex != 0) {
-            val ix = if (b) index else curIndex
-            //处理后就恢复
-            if (b) requestPermissionIndex = -1
-            AnimationActivity.startActivity(this, ix)
+        val b = index.value > CleanType.NOTHING.value
+
+        val ix = if (b) index else curIndex
+        if (ix == CleanType.CLEAN) {
+            JunkCleanActivity.startActivity(this, ix.value)
         } else {
-            //清理类型为CLEAN时
-            JunkCleanActivity.startActivity(this, 0)
+            AnimationActivity.startActivity(this, ix.value)
         }
+        requestPermissionIndex = CleanType.NOTHING
+
     }
 
     /**
@@ -177,10 +205,11 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
         // 通过SharedPreference获取是否刷新
         val isRefresh = getBoolean(this, "is_refresh", false)
+        "isRefresh $isRefresh".logd("JBNJWQNDN")
         if (isRefresh) {
             //需要刷新主界面  全部恢复默认状态
-            this.index = -1
-            this.curHomeBtnShowIndex = 0
+            this.cleanedType = CleanType.NOTHING
+            this.curHomeBtnShowIndex = CleanType.CLEAN
             this.cleanTypes.forEach {
                 it.cleaned = false
             }
@@ -189,26 +218,25 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
             //时间重置
             putLong(this, "start_time", -1L)
             //更新主按钮
-            val color = ContextCompat.getColor(this@HomeActivity, R.color.un_clean)
             updateHomeBtn(
-                R.drawable.ic_home_circle_un_1,
-                R.drawable.ic_home_circle_un_2,
+                Pair(R.drawable.ic_home_circle_un_2, R.color.un_clean),
                 unCleanIcons[0],
-                cleanTypeStrArray[0],
-                color
+                cleanTypeStrArray[0]
             )
+            return
         }
 
-        var curIndex = this.index
-        if (curIndex < 0) return
-
-        var nextIndex = -1
+        val curCleaned = this.cleanedType
+        if (curCleaned == CleanType.NOTHING) return
+        var curIndex = curCleaned.value
+        //下一个应清理的
+        var nextIndex = CleanType.NOTHING
         val size = cleanTypes.size
 
         for (i in 0..size - 2) {
             val index = (curIndex + 1) % size
             if (!cleanTypes[index].cleaned) {
-                nextIndex = index
+                nextIndex = CleanType.switchToTypeByValue(index)
                 break
             }
             curIndex++
@@ -217,43 +245,32 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         //最开始啥都没清理默认状态
         //全部清理完成显示绿框加booster
         //有未清理的就显示红框加未清理的按钮
-        if (nextIndex == -1) {
+        if (nextIndex == CleanType.NOTHING) {
             // 全部清理完成
-            val color = ContextCompat.getColor(this@HomeActivity, R.color.cleaned)
             updateHomeBtn(
-                R.drawable.ic_home_circle_1,
-                R.drawable.ic_home_circle_2,
-                R.drawable.ic_phone_booster,
-                cleanTypeStrArray[1],
-                color
+                Pair(R.drawable.ic_home_circle_2, R.color.cleaned),
+                cleanedIcons[0],
+                cleanTypeStrArray[0]
             )
-            curHomeBtnShowIndex = 0
+            curHomeBtnShowIndex = CleanType.CLEAN
         } else {
-            val color = ContextCompat.getColor(this@HomeActivity, R.color.un_clean)
-            updateHomeBtn(
-                R.drawable.ic_home_circle_un_1,
-                R.drawable.ic_home_circle_un_2,
-                unCleanIcons[nextIndex],
-                cleanTypeStrArray[nextIndex],
-                color
-            )
+            val pair = homeBtnStyleGroup.random()
+            updateHomeBtn(pair, unCleanIcons[nextIndex.value], cleanTypeStrArray[nextIndex.value])
             curHomeBtnShowIndex = nextIndex
         }
     }
 
     private fun updateHomeBtn(
-        outCircleResId: Int,
-        innerCircleResId: Int,
-        centerIconResId: Int,
-        centerName: String,
-        centerNameColor: Int
+        pair: Pair<Int, Int>, centerIconResId: Int, centerName: String,
     ) {
         binding.apply {
-            ivHomeOuterCircle.setImageResource(outCircleResId)
-            ivHomeInnerCircle.setImageResource(innerCircleResId)
+            val color = ContextCompat.getColor(this@HomeActivity, pair.second)
+            ivHomeOuterCircle.setColorFilter(color)
+            ivHomeInnerCircle.setImageResource(pair.first)
             ivCenterIcon.setImageResource(centerIconResId)
+            ivCenterIcon.setColorFilter(color)
             tvCenterName.text = centerName
-            tvCenterName.setTextColor(centerNameColor)
+            tvCenterName.setTextColor(color)
         }
     }
 
@@ -284,7 +301,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
                     putLong(this@HomeActivity, "start_time", System.currentTimeMillis())
 
                 this@HomeActivity.cleanTypes[index].cleaned = true
-                this@HomeActivity.index = index
+                this@HomeActivity.cleanedType = CleanType.switchToTypeByValue(index)
 
                 cleanTypes.forEach {
                     LogUtil.d(it.toString())

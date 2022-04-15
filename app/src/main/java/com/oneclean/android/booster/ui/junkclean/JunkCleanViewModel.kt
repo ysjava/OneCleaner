@@ -12,7 +12,6 @@ import com.oneclean.android.booster.utils.FileUtil
 import java.io.File
 import java.io.FileInputStream
 import kotlin.collections.ArrayList
-import kotlin.math.max
 
 class JunkCleanViewModel : ViewModel() {
     //存放删除后文件的type
@@ -20,19 +19,20 @@ class JunkCleanViewModel : ViewModel() {
     val keys: List<String> = _keys
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
-            1 -> _totalSize.value = it.obj as Long
+            1 -> {
+                val oldValue = _totalSize.value
+                _totalSize.value = (it.obj as Long) + oldValue!!
+            }
             2 -> {
                 val type = it.data.getString("type")!!
                 val size = it.obj as Long
-
                 when (type) {
-                    "SystemCache" -> _keySystemCache.value = size
-                    "ResidualJunks" -> _keyResidualJunks.value = size
-                    "AdJunks" -> _keyAdJunks.value = size
-                    "ObsoleteApk" -> _keyObsoleteApk.value = size
-                    "ThumbPhoto" -> _keyThumbPhoto.value = size
+                    "SystemJunk" -> _keySystemJunk.value = size
+                    "ObsoleteFiles" -> _keyObsoleteFiles.value = size
+                    "ApkJunk" -> _keyApkJunk.value = size
+                    "ResidualJunk" -> _keyResidualJunk.value = size
                     "TempFiles" -> _keyTempFiles.value = size
-                    "CleanMemory" -> _keyCleanMemory.value = size
+                    "DeepCleanJunk" -> _keyDeepCleanJunk.value = size
                 }
             }
             3 -> _handleStatus.value = "ScanComplete"
@@ -71,12 +71,14 @@ class JunkCleanViewModel : ViewModel() {
     fun handleFiles(files: Array<File>?) {
         Thread {
             val startScanningTime = System.currentTimeMillis()
+            //生成假数据
+            generateData()
             realHandleFiles(files)
             val endScanningTime = System.currentTimeMillis()
             val time = (endScanningTime - startScanningTime) / 1000
             //小于10s就随机4-8s，否则就原时间
-            val delay = if (time > 10) time else ((3 - time)..(8 - time)).random()
-            handler.sendEmptyMessageDelayed(3, max(0, delay * 1000))
+            val delay = if (time < 10) ((4L - time)..(8L - time)).random() else 0
+            handler.sendEmptyMessageDelayed(3, delay * 1000)
         }.start()
     }
 
@@ -87,14 +89,12 @@ class JunkCleanViewModel : ViewModel() {
 
             //name.contains("xxx")  xxx即为指定类型的文件
             when {
-                name.contains("cache") -> addFile(it, "SystemCache")
-                name.contains("log") -> addFile(it, "ResidualJunks")
-                name.contains("txt") -> addFile(it, "AdJunks")
-                name.contains("apk") -> addFile(it, "ObsoleteApk")
-                name.contains("jpg") || name.contains("png")
-                -> addFile(it, "ThumbPhoto")
+                name.contains("cache") -> addFile(it, "SystemJunk")
+                name.contains("log") -> addFile(it, "ObsoleteFiles")
+                name.contains("apk") -> addFile(it, "ApkJunk")
+                name.contains("apk") -> addFile(it, "ResidualJunk")
                 name.contains("temp") -> addFile(it, "TempFiles")
-                name.contains("不晓得啥类型了") -> addFile(it, "CleanMemory")
+                name.contains("自动生产的垃圾") -> addFile(it, "DeepCleanJunk")
                 else -> {
                     //如果未匹配并且是文件夹就继续遍历
                     if (it.isDirectory) realHandleFiles(it.listFiles())
@@ -105,7 +105,6 @@ class JunkCleanViewModel : ViewModel() {
 
     //总垃圾文件大小
     private val _totalSize = MutableLiveData<Long>(0)
-    private var backgroundTotalSize = 0L
     val totalSize = Transformations.map(_totalSize) {
         formatSize(it).trim()
     }
@@ -137,10 +136,8 @@ class JunkCleanViewModel : ViewModel() {
             //总大小显示动态更新
             var message = Message.obtain()
             message.what = 1
-            backgroundTotalSize += fileSize
-            message.obj = backgroundTotalSize
-//            handler.sendMessage(message)
-            handler.sendMessageDelayed(message, delayTime)
+            message.obj = fileSize
+            handler.sendMessageDelayed(message, 0)
 
             _typeSizeMap[type] = if (sv == null) fileSize else sv + fileSize
             //更新某个type的总大小
@@ -150,8 +147,7 @@ class JunkCleanViewModel : ViewModel() {
             val bundle = Bundle()
             bundle.putString("type", type)
             message.data = bundle
-//            handler.sendMessage(message)
-            handler.sendMessageDelayed(message, delayTime)
+            handler.sendMessage(message)
 
             //添加垃圾文件
             if (_fileMap[type] == null)
@@ -163,13 +159,11 @@ class JunkCleanViewModel : ViewModel() {
     }
 
     private val _typeSizeMap = hashMapOf(
-        Pair("SystemCache", 0L),
-        Pair("ResidualJunks", 0L),
-        Pair("AdJunks", 0L),
-        Pair("ObsoleteApk", 0L),
-        Pair("ThumbPhoto", 0L),
-        Pair("TempFiles", 0L),
-        Pair("CleanMemory", 0L)
+        Pair("SystemJunk", 0L),
+        Pair("ObsoleteFiles", 0L),
+        Pair("ApkJunk", 0L),
+        Pair("ResidualJunk", 0L),
+        Pair("TempFiles", 0L)
     )
 
     val typeSizeMap: Map<String, Long> = _typeSizeMap
@@ -177,24 +171,21 @@ class JunkCleanViewModel : ViewModel() {
     private val _handleStatus = MutableLiveData("")
     val handleStatus: LiveData<String> = _handleStatus
 
-    private val _keySystemCache = MutableLiveData<Long>(0)
-    private val _keyResidualJunks = MutableLiveData<Long>(0)
-    private val _keyAdJunks = MutableLiveData<Long>(0)
-    private val _keyObsoleteApk = MutableLiveData<Long>(0)
-    private val _keyThumbPhoto = MutableLiveData<Long>(0)
+    private val _keySystemJunk = MutableLiveData<Long>(0)
+    private val _keyObsoleteFiles = MutableLiveData<Long>(0)
+    private val _keyApkJunk = MutableLiveData<Long>(0)
+    private val _keyResidualJunk = MutableLiveData<Long>(0)
     private val _keyTempFiles = MutableLiveData<Long>(0)
-    private val _keyCleanMemory = MutableLiveData<Long>(0)
+    private val _keyDeepCleanJunk = MutableLiveData<Long>(0)
 
-    val keySystemCache = Transformations.map(_keySystemCache) { it }
-    val keyResidualJunks = Transformations.map(_keyResidualJunks) { it }
-    val keyAdJunks = Transformations.map(_keyAdJunks) { it }
-    val keyObsoleteApk = Transformations.map(_keyObsoleteApk) { it }
-    val keyThumbPhoto = Transformations.map(_keyThumbPhoto) { it }
+    val keySystemJunk = Transformations.map(_keySystemJunk) { it }
+    val keyObsoleteFiles = Transformations.map(_keyObsoleteFiles) { it }
+    val keyApkJunk = Transformations.map(_keyApkJunk) { it }
+    val keyResidualJunk = Transformations.map(_keyResidualJunk) { it }
     val keyTempFiles = Transformations.map(_keyTempFiles) { it }
-    val keyCleanMemory = Transformations.map(_keyCleanMemory) { it }
+    val keyDeepCleanJunk = Transformations.map(_keyDeepCleanJunk) { it }
 
-    private val delayTime = (10..100).random().toLong()
-    fun formatSize(size: Long): String {
+    private fun formatSize(size: Long): String {
 
         val kb = size / 1024.0
         val mb = kb / 1024.0
@@ -223,28 +214,28 @@ class JunkCleanViewModel : ViewModel() {
                     //删除文件
                     FileUtil.deleteFile(file)
 //=========== 要执行动画，不进行数据动态更新了，删除文件即可====================
-                /*  val fileSize = fileSize(file)
-                    //'type'类型的垃圾文件大小
-                    val sv = _typeSizeMap[it.key]
+                    /*  val fileSize = fileSize(file)
+                        //'type'类型的垃圾文件大小
+                        val sv = _typeSizeMap[it.key]
 
-                    //总大小显示动态更新
-                    var message = Message.obtain()
-                    message.what = 1
-                    backgroundTotalSize -= fileSize
-                    message.obj = backgroundTotalSize
-                    handler.sendMessage(message)
-                    handler.sendMessageDelayed(message, delayTime)
+                        //总大小显示动态更新
+                        var message = Message.obtain()
+                        message.what = 1
+                        backgroundTotalSize -= fileSize
+                        message.obj = backgroundTotalSize
+                        handler.sendMessage(message)
+                        handler.sendMessageDelayed(message, delayTime)
 
-                    _typeSizeMap[it.key] = if (sv == null) 0 else sv - fileSize
-                    message = Message.obtain()
-                    message.what = 2
-                    message.obj = _typeSizeMap[it.key]
-                    val bundle = Bundle()
-                    bundle.putString("type", it.key)
-                    message.data = bundle
-                    handler.sendMessage(message)
-                    handler.sendMessageDelayed(message, delayTime)
-                */
+                        _typeSizeMap[it.key] = if (sv == null) 0 else sv - fileSize
+                        message = Message.obtain()
+                        message.what = 2
+                        message.obj = _typeSizeMap[it.key]
+                        val bundle = Bundle()
+                        bundle.putString("type", it.key)
+                        message.data = bundle
+                        handler.sendMessage(message)
+                        handler.sendMessageDelayed(message, delayTime)
+                    */
                 }
                 //删除完一种类型的垃圾文件后移除集合
                 _typeSizeMap.remove(it.key)
@@ -261,17 +252,21 @@ class JunkCleanViewModel : ViewModel() {
         }.start()
     }
 
+
+    private val unCheckedFileHashMap = hashMapOf<String, ArrayList<File>>()
+
     /**
      * 选中或者取消选中后更新总数显示信息
      * @param type 操作的类型
      * @param checked 选中结果
      * */
     fun updateData(type: String, checked: Boolean) {
-        val size = _typeSizeMap[type] ?: 0L
+        val size = _typeSizeMap[type] ?: backFakeDataSize
         val oldTotalSize = _totalSize.value!!
         val reSize = if (checked) oldTotalSize + size else oldTotalSize - size
         _totalSize.value = reSize
-        backgroundTotalSize = reSize
+
+        if (type == "DeepCleanJunk") return
         if (_fileMap[type] == null && unCheckedFileHashMap[type] == null) return
 
         if (checked) {
@@ -285,5 +280,37 @@ class JunkCleanViewModel : ViewModel() {
         }
     }
 
-    private val unCheckedFileHashMap = hashMapOf<String, ArrayList<File>>()
+    private val fakeDataList = mutableListOf<Long>()
+    var backFakeDataSize = 0L
+        private set
+
+    private fun generateData() {
+
+        val m = 1024 * 1024 * 1L
+        val fileNumber = (10..23).random()
+        val fakeDateSize = (100 * m..2048 * m).random()
+
+        for (i in 0 until fileNumber) {
+
+            val size = fakeDateSize / fileNumber
+            fakeDataList.add(size)
+
+            //进行更新
+            var message = Message.obtain()
+            message.what = 1
+            message.obj = size
+            val delay = (100L * i) + (50..300).random()
+            handler.sendMessageDelayed(message, delay)
+
+            //假数据单独更新
+            message = Message.obtain()
+            message.what = 2
+            backFakeDataSize += size
+            message.obj = backFakeDataSize
+            val bundle = Bundle()
+            bundle.putString("type", "DeepCleanJunk")
+            message.data = bundle
+            handler.sendMessageDelayed(message, delay)
+        }
+    }
 }

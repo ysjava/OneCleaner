@@ -46,12 +46,13 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
             android:id="@+id/lay_icon_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_88"/>
+            android:layout_height="@dimen/dp_88"
+            android:animateLayoutChanges="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lav_animation"
@@ -63,12 +64,24 @@
             app:lottie_loop="true"
             tools:ignore="ImageContrastCheck" />
 
+        <TextView
+            android:id="@+id/tv_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_56"
+            android:text="@string/complete"
+            android:layout_gravity="center"
+            android:textColor="#333333"
+            android:visibility="gone"
+            android:textSize="@dimen/sp_18" />
+
+
         <ImageView
             android:id="@+id/iv_scanning_view"
             android:layout_width="match_parent"
-            android:alpha="0"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:alpha="0"
             android:background="@drawable/ic_scanning"
             android:contentDescription="@string/app_name"
             tools:ignore="ImageContrastCheck" />

@@ -28,9 +28,11 @@ class OneCleanerApplication : Application() {
                 //每次启动应用就去判断时间是否超过15
                 //超过就SharedPreference记录
                 val startTime = getLong(this@OneCleanerApplication, "start_time", -1)
+                if (startTime == -1L) return
                 val t = System.currentTimeMillis() - startTime
-                //超过15分钟
-                if (t >= 1000 * 15 && startTime != -1L) {
+
+                //超过15分钟 1000 * 60 * 15
+                if (t >= 1000 * 60 * 15) {
                     putBoolean(this@OneCleanerApplication, "is_refresh", true)
                 }
             }

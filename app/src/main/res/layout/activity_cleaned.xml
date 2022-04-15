@@ -48,14 +48,14 @@
                 android:background="@drawable/bg_cleaned_main">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_center_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableTop="@drawable/ic_cleaned_ok"
                     android:text="@string/accelerated_success"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_18"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/sp_18"/>
             </FrameLayout>
 
             <LinearLayout
@@ -86,20 +86,20 @@
                         android:id="@+id/tv_name_cpu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/iv_cpu"
+                        android:layout_alignParentTop="true"
                         android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/dp_8"
                         android:layout_toEndOf="@id/iv_cpu"
                         android:text="@string/cpu_cooler"
                         android:textColor="#333333"
-                        android:textSize="@dimen/sp_16"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/sp_16" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_name_cpu"
                         android:layout_toEndOf="@id/iv_cpu"
-                        android:text="@string/accelerated_use_experience"
+                        android:text="@string/optimize_your_cpu_consuming_and_cool_your_phone"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_14" />
 
@@ -118,7 +118,7 @@
                         android:layout_below="@id/tag1"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
-                        android:text="@string/cooling_down"
+                        android:text="@string/cool_now"
                         android:textColor="#2FD9C8"
                         android:textSize="@dimen/sp_14" />
                 </RelativeLayout>
@@ -150,15 +150,14 @@
                         android:layout_toEndOf="@id/iv_booster"
                         android:text="@string/phone_booster"
                         android:textColor="#333333"
-                        android:textSize="@dimen/sp_16"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/sp_16" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_name_booster"
                         android:layout_toEndOf="@id/iv_booster"
-                        android:text="@string/accelerated_use_experience"
+                        android:text="@string/super_speed_up_your_phone"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_14" />
 
@@ -177,7 +176,7 @@
                         android:layout_below="@id/tag2"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
-                        android:text="@string/acceleration"
+                        android:text="@string/speed_up"
                         android:textColor="#2FD9C8"
                         android:textSize="@dimen/sp_14" />
                 </RelativeLayout>
@@ -209,15 +208,14 @@
                         android:layout_toEndOf="@id/iv_junk"
                         android:text="@string/junk_clean"
                         android:textColor="#333333"
-                        android:textSize="@dimen/sp_16"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/sp_16" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_name_junk"
                         android:layout_toEndOf="@id/iv_junk"
-                        android:text="@string/accelerated_use_experience"
+                        android:text="@string/junk_need_to_be_clean"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_14" />
 
@@ -236,7 +234,7 @@
                         android:layout_below="@id/tag3"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
-                        android:text="@string/scan_garbage"
+                        android:text="@string/clean_now"
                         android:textColor="#2FD9C8"
                         android:textSize="@dimen/sp_14" />
                 </RelativeLayout>
@@ -263,20 +261,20 @@
                         android:id="@+id/tv_name_battery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/iv_battery"
+                        android:layout_alignParentTop="true"
                         android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/dp_8"
                         android:layout_toEndOf="@id/iv_battery"
                         android:text="@string/battery_saver"
                         android:textColor="#333333"
-                        android:textSize="@dimen/sp_16"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/sp_16" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_name_battery"
                         android:layout_toEndOf="@id/iv_battery"
-                        android:text="@string/accelerated_use_experience"
+                        android:text="@string/battery_saving_master_save_phone_battery"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_14" />
 
@@ -294,7 +292,7 @@
                         android:layout_height="@dimen/dp_40"
                         android:layout_below="@id/tag4"
                         android:gravity="center"
-                        android:text="@string/repair_battery"
+                        android:text="@string/save_now"
                         android:textColor="#2FD9C8"
                         android:textSize="@dimen/sp_14" />
                 </RelativeLayout>
