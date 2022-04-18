@@ -16,261 +16,265 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_56"
+            android:layout_height="56dp"
+            android:background="#F9FAFA"
             android:fitsSystemWindows="true"
-            app:contentInsetEnd="@dimen/dp_20"
-            app:contentInsetStart="@dimen/dp_20">
+            app:contentInsetEnd="20dp"
+            app:contentInsetStart="20dp">
 
             <ImageView
-                android:layout_width="@dimen/dp_126"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="126dp"
+                android:layout_height="20dp"
                 android:src="@mipmap/one_cleaner" />
 
             <ImageView
                 android:id="@+id/iv_drawer"
-                android:layout_width="@dimen/dp_24"
-                android:layout_height="@dimen/dp_24"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="end"
                 android:src="@drawable/ic_set_up" />
         </androidx.appcompat.widget.Toolbar>
 
-
-        <FrameLayout
-            android:id="@+id/lay_home_btn"
-            android:layout_width="@dimen/dp_243"
-            android:layout_height="@dimen/dp_243"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dp_30">
-
-            <ImageView
-                android:id="@+id/iv_home_outer_circle"
-                android:layout_width="@dimen/dp_240"
-                android:layout_height="@dimen/dp_240"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_home_circle_un_1" />
-
-            <ImageView
-                android:id="@+id/iv_home_inner_circle"
-                android:layout_width="@dimen/dp_220"
-                android:layout_height="@dimen/dp_220"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_home_circle_un_2" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
-
-                <ImageView
-                    android:id="@+id/iv_center_icon"
-                    android:layout_width="@dimen/dp_40"
-                    android:layout_height="@dimen/dp_40"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dp_8"
-                    android:src="@drawable/ic_junk_clean_un" />
-
-                <TextView
-                    android:id="@+id/tv_center_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/clean_main"
-                    android:textColor="#F8903A"
-                    android:textSize="@dimen/sp_20" />
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_20"
-            android:text="@string/speed_up_your_phone"
-            android:textColor="#666666"
-            android:textSize="@dimen/sp_14" />
-
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_40"
-            android:layout_marginBottom="@dimen/dp_12"
-            android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/dp_20">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:overScrollMode="never">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_junk_clean"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_94"
-                android:layout_weight="1"
-                app:cardCornerRadius="@dimen/dp_10"
-                app:cardElevation="@dimen/dp_0">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/dp_36"
-                    android:layout_height="@dimen/dp_36"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:src="@drawable/ic_junk_clean" />
+                <FrameLayout
+                    android:id="@+id/lay_home_btn"
+                    android:layout_width="243dp"
+                    android:layout_height="243dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dp_28"
-                    android:text="@string/junk_clean"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14" />
-            </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:id="@+id/iv_home_outer_circle"
+                        android:layout_width="240dp"
+                        android:layout_height="240dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_home_circle_un_1" />
 
+                    <ImageView
+                        android:id="@+id/iv_home_inner_circle"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_home_circle_un_2" />
 
-            <View
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_1" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
 
+                        <ImageView
+                            android:id="@+id/iv_center_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="8dp"
+                            android:src="@drawable/ic_junk_clean_un" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_phone_booster"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_94"
-                android:layout_weight="1"
-                app:cardCornerRadius="@dimen/dp_10"
-                app:cardElevation="@dimen/dp_0">
+                        <TextView
+                            android:id="@+id/tv_center_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/clean_main"
+                            android:textColor="#F8903A"
+                            android:textSize="20sp" />
+                    </LinearLayout>
 
-                <ImageView
-                    android:layout_width="@dimen/dp_36"
-                    android:layout_height="@dimen/dp_36"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:src="@drawable/ic_phone_booster" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dp_28"
-                    android:text="@string/phone_booster"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14" />
-            </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/dp_20">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_battery_saver"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_94"
-                android:layout_weight="1"
-                app:cardCornerRadius="@dimen/dp_10"
-                app:cardElevation="@dimen/dp_0">
-
-                <ImageView
-                    android:layout_width="@dimen/dp_36"
-                    android:layout_height="@dimen/dp_36"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:src="@drawable/ic_battery" />
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dp_28"
-                    android:text="@string/battery_saver"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14" />
-            </com.google.android.material.card.MaterialCardView>
+                    android:layout_marginTop="20dp"
+                    android:text="@string/speed_up_your_phone"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
 
-
-            <View
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_1" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_cpu_cooler"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_94"
-                android:layout_weight="1"
-                app:cardCornerRadius="@dimen/dp_10"
-                app:cardElevation="@dimen/dp_0">
-
-                <ImageView
-                    android:layout_width="@dimen/dp_36"
-                    android:layout_height="@dimen/dp_36"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:src="@drawable/ic_cpu_cooler" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dp_28"
-                    android:text="@string/cpu_cooler"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14" />
-            </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/dp_24"
-            android:layout_marginTop="@dimen/dp_42"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/dp_10">
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cv_junk_clean"
+                        android:layout_width="0dp"
+                        android:layout_height="94dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp">
 
-            <RelativeLayout
-                android:layout_width="@dimen/dp_320"
-                android:layout_height="@dimen/dp_68"
-                android:padding="@dimen/dp_10"
-                android:visibility="gone">
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/ic_junk_clean" />
 
-                <com.oneclean.android.booster.widget.RoundAngleImageView
-                    android:id="@+id/iv_ad_icon"
-                    android:layout_width="@dimen/dp_48"
-                    android:layout_height="@dimen/dp_48"
-                    android:src="@drawable/nn" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="28dp"
+                            android:text="@string/junk_clean"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_ad_name"
-                    android:layout_width="wrap_content"
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cv_phone_booster"
+                        android:layout_width="0dp"
+                        android:layout_height="94dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/ic_phone_booster" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="28dp"
+                            android:text="@string/phone_booster"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/sp_14"
-                    android:layout_toEndOf="@id/iv_ad_icon"
-                    android:text="@string/boom_beach"
-                    android:textColor="#333333"
-                    android:textStyle="bold"
-                    tools:ignore="RelativeOverlap" />
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cv_battery_saver"
+                        android:layout_width="0dp"
+                        android:layout_height="94dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/ic_battery" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="28dp"
+                            android:text="@string/battery_saver"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cv_cpu_cooler"
+                        android:layout_width="0dp"
+                        android:layout_height="94dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/ic_cpu_cooler" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="28dp"
+                            android:text="@string/cpu_cooler"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_ad_name"
-                    android:layout_alignStart="@+id/tv_ad_name"
-                    android:layout_marginTop="@dimen/dp_3"
-                    android:text="@string/start_building_your_all_is..."
-                    android:textSize="@dimen/sp_12" />
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="48dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="10dp">
 
-                <TextView
-                    android:layout_width="@dimen/dp_68"
-                    android:layout_height="@dimen/dp_32"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/bg_ad_install"
-                    android:gravity="center"
-                    android:text="@string/install"
-                    android:textColor="@color/white" />
-            </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <RelativeLayout
+                        android:layout_width="320dp"
+                        android:layout_height="68dp"
+                        android:padding="10dp">
 
+                        <com.oneclean.android.booster.widget.RoundAngleImageView
+                            android:id="@+id/iv_ad_icon"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/nn" />
+
+                        <TextView
+                            android:id="@+id/tv_ad_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14sp"
+                            android:layout_toEndOf="@id/iv_ad_icon"
+                            android:text="@string/boom_beach"
+                            android:textColor="#333333"
+                            android:textStyle="bold"
+                            tools:ignore="RelativeOverlap" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_ad_name"
+                            android:layout_alignStart="@+id/tv_ad_name"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/start_building_your_all_is..."
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="68dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/bg_ad_install"
+                            android:gravity="center"
+                            android:text="@string/install"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
     <LinearLayout
@@ -284,7 +288,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_280">
+            android:layout_height="280dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -292,8 +296,8 @@
                 android:src="@drawable/ic_drawer_bg" />
 
             <ImageView
-                android:layout_width="@dimen/dp_132"
-                android:layout_height="@dimen/dp_132"
+                android:layout_width="132dp"
+                android:layout_height="132dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_drawer_icon" />
 
@@ -302,15 +306,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="@dimen/dp_20"
-                android:layout_marginEnd="@dimen/dp_20"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_drawer_close" />
         </FrameLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_rating_us"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_60"
+            android:layout_height="60dp"
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp">
 
@@ -318,23 +322,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dp_26"
+                android:layout_marginStart="26dp"
                 android:text="@string/rating_us"
                 android:textColor="#333333"
-                android:textSize="@dimen/sp_16" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="@dimen/dp_20"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_right" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_share"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_60"
+            android:layout_height="60dp"
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp">
 
@@ -342,23 +346,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dp_26"
+                android:layout_marginStart="26dp"
                 android:text="@string/share"
                 android:textColor="#333333"
-                android:textSize="@dimen/sp_16" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="@dimen/dp_20"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_right" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_privacy_policy"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_60"
+            android:layout_height="60dp"
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp">
 
@@ -366,16 +370,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dp_26"
+                android:layout_marginStart="26dp"
                 android:text="@string/privacy_policy"
                 android:textColor="#333333"
-                android:textSize="@dimen/sp_16" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="@dimen/dp_20"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_right" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -387,10 +391,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_26"
-            android:layout_marginBottom="@dimen/dp_70"
+            android:layout_marginStart="26dp"
+            android:layout_marginBottom="70dp"
             android:text="@string/v1_0_0"
             android:textColor="#999999"
-            android:textSize="@dimen/sp_12" />
+            android:textSize="12sp" />
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

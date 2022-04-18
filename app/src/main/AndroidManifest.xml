@@ -28,9 +28,7 @@
             android:exported="true">
 
         </activity>
-        <activity
-            android:name=".ui.PrivacyPolicyActivity"
-            android:exported="false" />
+
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true" />

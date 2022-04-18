@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.oneclean.android.booster.utils.FileUtil
+import com.oneclean.android.booster.utils.logd
 import java.io.File
 import java.io.FileInputStream
 import kotlin.collections.ArrayList
@@ -92,7 +93,7 @@ class JunkCleanViewModel : ViewModel() {
                 name.contains("cache") -> addFile(it, "SystemJunk")
                 name.contains("log") -> addFile(it, "ObsoleteFiles")
                 name.contains("apk") -> addFile(it, "ApkJunk")
-                name.contains("apk") -> addFile(it, "ResidualJunk")
+                name.endsWith(".txt") -> addFile(it, "ResidualJunk")
                 name.contains("temp") -> addFile(it, "TempFiles")
                 name.contains("自动生产的垃圾") -> addFile(it, "DeepCleanJunk")
                 else -> {
@@ -299,7 +300,7 @@ class JunkCleanViewModel : ViewModel() {
             var message = Message.obtain()
             message.what = 1
             message.obj = size
-            val delay = (100L * i) + (50..300).random()
+            val delay = 100L * i
             handler.sendMessageDelayed(message, delay)
 
             //假数据单独更新

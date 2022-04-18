@@ -20,7 +20,7 @@
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginEnd="10dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_back" />
 
@@ -31,33 +31,33 @@
             android:contentDescription="@string/app_name"
             android:text="@string/junk_clean"
             android:textColor="#333333"
-            android:textSize="@dimen/sp_18"
+            android:textSize="18sp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
-    <FrameLayout
+    <com.oneclean.android.booster.widget.viewgroup.EquilateralFrameLayout
         android:id="@+id/lay_tag1"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_360"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dp_60"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/lay_icon_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_88"
-            android:animateLayoutChanges="true"
+            android:layout_height="88dp"
             android:layout_gravity="center"
+            android:animateLayoutChanges="true"
             android:gravity="center"
             android:orientation="horizontal" />
 
-        <com.airbnb.lottie.LottieAnimationView
+        <com.oneclean.android.booster.widget.viewgroup.EquilateralLottieAnimationView
             android:id="@+id/lav_animation"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_360"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone"
             app:lottie_autoPlay="true"
             app:lottie_fileName="Phone Booster .json"
@@ -68,12 +68,12 @@
             android:id="@+id/tv_complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_56"
-            android:text="@string/complete"
             android:layout_gravity="center"
+            android:layout_marginTop="56dp"
+            android:text="@string/complete"
             android:textColor="#333333"
-            android:visibility="gone"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
 
         <ImageView
@@ -85,17 +85,17 @@
             android:background="@drawable/ic_scanning"
             android:contentDescription="@string/app_name"
             tools:ignore="ImageContrastCheck" />
-    </FrameLayout>
+    </com.oneclean.android.booster.widget.viewgroup.EquilateralFrameLayout>
 
 
     <TextView
         android:id="@+id/tv_animation_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_66"
+        android:layout_marginTop="66dp"
         android:text="@string/scanning..."
         android:textColor="#333333"
-        android:textSize="@dimen/sp_14"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lay_tag1"

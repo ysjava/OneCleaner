@@ -21,6 +21,7 @@ import com.oneclean.android.booster.ui.base.BaseActivity
 
 import com.oneclean.android.booster.ui.cleaned.CleanedActivity
 import com.oneclean.android.booster.ui.home.HomeActivity
+import com.oneclean.android.booster.utils.dp2px
 import java.util.*
 
 class AnimationActivity : BaseActivity(R.layout.activity_animation) {
@@ -83,8 +84,9 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
     private var animatorSet: AnimatorSet? = null
     private fun scanningAnim(cleanType: CleanType) {
         showAppsIcon()
-        val height = resources.getDimensionPixelSize(R.dimen.dp_330).toFloat()
-        val dp60 = resources.getDimensionPixelSize(R.dimen.dp_60).toFloat()
+
+        val height = dp2px(330f).toFloat()
+        val dp60 = dp2px(60f).toFloat()
 
         val animatorSet = AnimatorSet()
         this.animatorSet = animatorSet

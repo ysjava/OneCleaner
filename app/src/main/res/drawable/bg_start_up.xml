@@ -10,9 +10,9 @@
     <!--    </item>-->
     <item android:drawable="@drawable/mask" />
 
-    <item android:top="@dimen/dp_133">
-        <bitmap
-            android:gravity="top"
-            android:src="@drawable/ic_launcher" />
-    </item>
+<!--    <item>-->
+<!--        <bitmap-->
+<!--            android:gravity="top"-->
+<!--            android:src="@drawable/ic_launcher" />-->
+<!--    </item>-->
 </layer-list>

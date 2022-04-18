@@ -2,10 +2,8 @@ package com.oneclean.android.booster.ui.cleaned
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.NestedScrollView
 import com.hi.dhl.binding.viewbind
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityCleanedBinding
@@ -13,7 +11,6 @@ import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
-import kotlin.math.min
 
 class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickListener {
     private val binding: ActivityCleanedBinding by viewbind()
@@ -32,10 +29,6 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
         val value = intent.getIntExtra("CleanTypeValue", -1)
         cleanType = CleanType.switchToTypeByValue(value)
         initView()
-
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
-            binding.toolbar.setBackgroundColor(Color.argb(min(255, scrollY), 255, 255, 255))
-        })
 
         binding.apply {
             when (cleanType) {

@@ -5,13 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.lxj.xpopup.core.CenterPopupView
 import com.oneclean.android.booster.R
 
 class RatingUsPopup(context: Context) : CenterPopupView(context) {
     override fun getImplLayoutId(): Int {
-        return R.layout.dialog_rating_us
+        return R.layout.popup_rating_us
     }
 
     override fun onCreate() {

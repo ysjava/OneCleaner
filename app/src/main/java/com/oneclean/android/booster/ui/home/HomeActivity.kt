@@ -72,14 +72,11 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
         binding.ivHomeOuterCircle.setOnClickListener {
             temp = 1
-            requestPermission(reqSuccess, reqFail, by11RequestFail)
+            requestPermission(reqSuccess, reqFail, for11RequestFail)
         }
 
         initAnimation()
     }
-
-    /**为了让点击页面下方四个按钮能权限验证完成后，能正常的执行跳转*/
-    private var requestPermissionIndex = CleanType.NOTHING
 
     private fun initView() {
         binding.apply {
@@ -106,7 +103,8 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
             cvPrivacyPolicy.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW).apply {
                     data = Uri.parse(
-                        "https://onecleanerr.com/policy")
+                        "https://onecleanerr.com/policy"
+                    )
                 }
                 layDrawer.close()
                 startActivity(intent)
@@ -121,7 +119,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     private fun performStartActivity(type: CleanType) {
         temp = 1
         requestPermissionIndex = type
-        requestPermission(reqSuccess, reqFail,by11RequestFail)
+        requestPermission(reqSuccess, reqFail, for11RequestFail)
     }
 
     /**启动activity*/
@@ -137,7 +135,12 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
     /**防止重复去做StorageManager权限请求*/
     private var temp = 1
-    private val by11RequestFail = {
+
+    /** android 11 及以上需要 ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION 权限*/
+    private val for11RequestFail = {
+        //TODO 预留一个弹窗 确认后才去请求该权限
+        //For11RequestFailPopup()
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (temp == 1) {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
@@ -161,6 +164,9 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
             performRealStartActivity()
         }
     }
+
+    /**为了让点击页面下方四个按钮能权限验证完成后，能正常的执行跳转*/
+    private var requestPermissionIndex = CleanType.NOTHING
 
     /**
      * 真实的执行activity跳转
@@ -205,7 +211,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
         // 通过SharedPreference获取是否刷新
         val isRefresh = getBoolean(this, "is_refresh", false)
-        "isRefresh $isRefresh".logd("JBNJWQNDN")
+
         if (isRefresh) {
             //需要刷新主界面  全部恢复默认状态
             this.cleanedType = CleanType.NOTHING
@@ -245,19 +251,24 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         //最开始啥都没清理默认状态
         //全部清理完成显示绿框加booster
         //有未清理的就显示红框加未清理的按钮
-        if (nextIndex == CleanType.NOTHING) {
-            // 全部清理完成
-            updateHomeBtn(
-                Pair(R.drawable.ic_home_circle_2, R.color.cleaned),
-                cleanedIcons[0],
-                cleanTypeStrArray[0]
-            )
-            curHomeBtnShowIndex = CleanType.CLEAN
-        } else {
-            val pair = homeBtnStyleGroup.random()
-            updateHomeBtn(pair, unCleanIcons[nextIndex.value], cleanTypeStrArray[nextIndex.value])
-            curHomeBtnShowIndex = nextIndex
-        }
+        curHomeBtnShowIndex =
+            if (nextIndex == CleanType.NOTHING) {
+                // 全部清理完成
+                updateHomeBtn(
+                    Pair(R.drawable.ic_home_circle_2, R.color.cleaned),
+                    cleanedIcons[0],
+                    cleanTypeStrArray[0]
+                )
+                CleanType.CLEAN
+            } else {
+                val pair = homeBtnStyleGroup.random()
+                updateHomeBtn(
+                    pair,
+                    unCleanIcons[nextIndex.value],
+                    cleanTypeStrArray[nextIndex.value]
+                )
+                nextIndex
+            }
     }
 
     private fun updateHomeBtn(

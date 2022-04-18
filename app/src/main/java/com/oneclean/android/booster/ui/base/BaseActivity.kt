@@ -33,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity {
     protected fun requestPermission(
         success: (grantedList: List<String>) -> Unit,
         fail: (deniedList: List<String>) -> Unit,
-        by11RequestFail: (() -> Unit)? = null
+        for11RequestFail: (() -> Unit)? = null
     ) {
         PermissionX.init(this)
             .permissions(
@@ -47,13 +47,18 @@ abstract class BaseActivity : AppCompatActivity {
                 scope.showRequestReasonDialog(RequestPermissionPopup(this, "message", deniedList))
             }
             .onForwardToSettings { scope, deniedList ->
-                scope.showForwardToSettingsDialog(deniedList, "You need to manually open the permission in the application settings", "I understand", "Cancel")
+                scope.showForwardToSettingsDialog(
+                    deniedList,
+                    "You need to manually open the permission in the application settings",
+                    "I understand",
+                    "Cancel"
+                )
             }
             .request { allGranted, grantedList, deniedList ->
                 if (allGranted) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
-                        if (by11RequestFail != null)
-                            by11RequestFail()
+                        if (for11RequestFail != null)
+                            for11RequestFail()
                     } else {
                         success(grantedList)
                     }

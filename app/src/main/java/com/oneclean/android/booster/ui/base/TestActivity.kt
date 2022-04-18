@@ -28,14 +28,15 @@ class TestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test)
         val lay = findViewById<LinearLayout>(R.id.container)
         val button = findViewById<Button>(R.id.button)
-button.setOnClickListener {
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        data = Uri.parse(
-            "https://onecleanerr.com/policy")
-    }
-    startActivity(intent)
-    // 做跳转到谷歌play做好评的业务逻辑
-    //这里开始执行一个应用市场跳转逻辑，默认this为Context上下文对象
+        button.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(
+                    "https://onecleanerr.com/policy"
+                )
+            }
+            startActivity(intent)
+            // 做跳转到谷歌play做好评的业务逻辑
+            //这里开始执行一个应用市场跳转逻辑，默认this为Context上下文对象
 
 //    Log.d("HOmeFragment", "intent = $intent")
 //    //intent.data = Uri.parse("market://details?id=" + "com.xunmeng.pinduoduo") //跳转到应用市场，非Google Play市场一般情况也实现了这个接口
@@ -57,10 +58,7 @@ button.setOnClickListener {
 //    }
 
 
-}
-
-
-
+        }
 
 
 //        val container = findViewById<LinearLayout>(R.id.container)

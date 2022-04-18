@@ -65,7 +65,12 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
                 val index = it.indexOf(" ")
 
                 val spannable = SpannableString(it)
-                spannable.setSpan(RelativeSizeSpan(0.4F),index,it.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                spannable.setSpan(
+                    RelativeSizeSpan(0.4F),
+                    index,
+                    it.length,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
 
                 binding.tvTotalSize.text = spannable
                 val str = "Clean  $it"
@@ -79,6 +84,7 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
             keyResidualJunk.observe(this@JunkCleanActivity) { binding.slvResidualJunk.number = it }
             keyTempFiles.observe(this@JunkCleanActivity) { binding.slvTempFiles.number = it }
             keyDeepCleanJunk.observe(this@JunkCleanActivity) {
+                "observe========observe=========: $it".logd("IYGWUYGUYWGYQG")
                 binding.slvDeepCleanJunk.number = it
             }
 
@@ -156,7 +162,8 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
         val str1 = binding.tvTotalSize.text
         val str2 = "Clean  $str1"
         binding.tvClean.text = str2
-        binding.tvClean.isEnabled = viewModel.fileMap.isNotEmpty() || binding.slvDeepCleanJunk.loadingStatus == ScanLoadingView.LOADED
+        binding.tvClean.isEnabled =
+            viewModel.fileMap.isNotEmpty() || binding.slvDeepCleanJunk.loadingStatus == ScanLoadingView.LOADED
     }
 
     override fun changed(isChecked: Boolean, id: Int) {

@@ -21,7 +21,7 @@ class RequestPermissionPopup(
     private lateinit var tvRequest: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_permission)
+        setContentView(R.layout.popup_permission)
 
         tvClose = findViewById(R.id.tv_close)
         tvRequest = findViewById(R.id.tv_request)
