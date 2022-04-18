@@ -22,6 +22,7 @@ import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.cleaned.CleanedActivity
 import com.oneclean.android.booster.ui.home.HomeActivity
 import com.oneclean.android.booster.utils.dp2px
+import com.oneclean.android.booster.utils.getStatusHeight
 import java.util.*
 
 class AnimationActivity : BaseActivity(R.layout.activity_animation) {
@@ -187,6 +188,13 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
     }
 
     private fun initView(cleanType: CleanType) {
+
+        //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val lp = toolbar.layoutParams
+        lp.height = lp.height + getStatusHeight()
+        toolbar.layoutParams = lp
+
         binding.apply {
             ivBack.setOnClickListener { finish() }
 

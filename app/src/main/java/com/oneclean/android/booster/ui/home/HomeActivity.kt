@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -25,6 +26,7 @@ import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
 import com.oneclean.android.booster.ui.popup.RatingUsPopup
 import com.oneclean.android.booster.utils.*
+import kotlin.math.log
 
 class HomeActivity : BaseActivity(R.layout.activity_home) {
     private val binding: ActivityHomeBinding by viewbind()
@@ -67,6 +69,13 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         super.onCreate(savedInstanceState)
         initCleanType()
         initView()
+
+        //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val lp = toolbar.layoutParams
+        lp.height = lp.height + getStatusHeight()
+        toolbar.layoutParams = lp
+
         registerReceiver(CleanCheckedBroadcastReceiver(), IntentFilter(BROADCAST_ACTION_DISC))
         //Junk Clean-> Phone Booster-> Battery Saver-> CPU Cooler
 

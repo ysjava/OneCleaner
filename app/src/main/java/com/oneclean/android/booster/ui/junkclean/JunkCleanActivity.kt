@@ -13,6 +13,7 @@ import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityJunkCleanBinding
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
+import com.oneclean.android.booster.utils.getStatusHeight
 import com.oneclean.android.booster.utils.logd
 import com.oneclean.android.booster.widget.ScanLoadingView
 
@@ -39,6 +40,13 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
     }
 
     private fun initView() {
+
+        //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val lp = toolbar.layoutParams
+        lp.height = lp.height + getStatusHeight()
+        toolbar.layoutParams = lp
+
         binding.apply {
             slvSystemJunk.setStatusChangedListener(this@JunkCleanActivity)
             slvObsoleteFiles.setStatusChangedListener(this@JunkCleanActivity)
