@@ -11,6 +11,7 @@ import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
+import com.oneclean.android.booster.utils.getStatusHeight
 
 class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickListener {
     private val binding: ActivityCleanedBinding by viewbind()
@@ -53,6 +54,12 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
             ivBack.setOnClickListener { finish() }
             tvTitle.text = getTitleText(cleanType.value)
         }
+
+        //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val lp = toolbar.layoutParams
+        lp.height = lp.height + getStatusHeight()
+        toolbar.layoutParams = lp
     }
 
     private fun getTitleText(cleanType: Int): String {

@@ -41,12 +41,6 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
 
     private fun initView() {
 
-        //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        val lp = toolbar.layoutParams
-        lp.height = lp.height + getStatusHeight()
-        toolbar.layoutParams = lp
-
         binding.apply {
             slvSystemJunk.setStatusChangedListener(this@JunkCleanActivity)
             slvObsoleteFiles.setStatusChangedListener(this@JunkCleanActivity)
@@ -64,6 +58,12 @@ class JunkCleanActivity : BaseActivity(R.layout.activity_junk_clean),
 
             ivBack.setOnClickListener { finish() }
         }
+
+        //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val lp = toolbar.layoutParams
+        lp.height = lp.height + getStatusHeight()
+        toolbar.layoutParams = lp
     }
 
 

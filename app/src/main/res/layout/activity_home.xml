@@ -17,8 +17,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="#F9FAFA"
+            android:layout_height="@dimen/toolbar_height"
             android:fitsSystemWindows="true"
             app:contentInsetEnd="20dp"
             app:contentInsetStart="20dp">

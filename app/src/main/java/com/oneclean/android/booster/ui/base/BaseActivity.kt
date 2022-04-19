@@ -13,15 +13,22 @@ import com.oneclean.android.booster.utils.initWindow
 import com.permissionx.guolindev.PermissionX
 
 abstract class BaseActivity : AppCompatActivity {
+
+    companion object{
+        var lastActivity: AppCompatActivity? = null
+    }
+
     constructor() : super()
 
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         initWindow(window)
+        lastActivity = this
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     /**
@@ -43,7 +50,6 @@ abstract class BaseActivity : AppCompatActivity {
             )
             .explainReasonBeforeRequest()
             .onExplainRequestReason { scope, deniedList ->
-//                scope.showRequestReasonDialog(deniedList, "应用需要用到以下权限才能正常使用", "同意", "取消")
                 scope.showRequestReasonDialog(RequestPermissionPopup(this, "message", deniedList))
             }
             .onForwardToSettings { scope, deniedList ->

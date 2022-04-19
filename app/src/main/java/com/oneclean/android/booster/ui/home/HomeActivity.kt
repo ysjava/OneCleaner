@@ -12,7 +12,6 @@ import android.provider.Settings
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -26,7 +25,6 @@ import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
 import com.oneclean.android.booster.ui.popup.RatingUsPopup
 import com.oneclean.android.booster.utils.*
-import kotlin.math.log
 
 class HomeActivity : BaseActivity(R.layout.activity_home) {
     private val binding: ActivityHomeBinding by viewbind()
@@ -139,7 +137,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
     /**未得到权限执行*/
     private val reqFail: (deniedList: List<String>) -> Unit = {
-        Toast.makeText(this, "需要你同意权限获取", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Need your permission to get", Toast.LENGTH_SHORT).show()
     }
 
     /**防止重复去做StorageManager权限请求*/

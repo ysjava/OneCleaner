@@ -50,9 +50,16 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         val cleanType = CleanType.switchToTypeByValue(value)
         this.cleanType = cleanType
 
+
         if (cleanType != CleanType.NOTHING) {
             initView(cleanType)
             startAnimationByType(cleanType)
+
+            //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
+            val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+            val lp = toolbar.layoutParams
+            lp.height = lp.height + getStatusHeight()
+            toolbar.layoutParams = lp
         }
     }
 
@@ -150,7 +157,7 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
     private fun getShowAppInfoList(): List<ApplicationInfo> {
         val result = mutableListOf<ApplicationInfo>()
         val randomSize = (5..8).random()
-        //11开始不非系统应用不让访问
+        //11开始非系统应用不让访问
         val list = packageManager.getInstalledPackages(0)
 
         for (info in (1..20).random() / 2 until list.size step (1..5).random()) {
@@ -176,9 +183,10 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         intent.action = HomeActivity.BROADCAST_ACTION_DISC
         intent.putExtra("CheckedIndex", cleanType.value)
         sendBroadcast(intent)
-        //跳转到加速完成页面  （或者直接写一起试试)
-        this.timer = Timer()
-        this.timer?.schedule(object : TimerTask() {
+        //跳转到加速完成页面
+        val timer = Timer()
+        this.timer = timer
+        timer.schedule(object : TimerTask() {
             override fun run() {
                 CleanedActivity.startActivity(this@AnimationActivity, cleanType.value)
                 finish()
@@ -188,12 +196,6 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
     }
 
     private fun initView(cleanType: CleanType) {
-
-        //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        val lp = toolbar.layoutParams
-        lp.height = lp.height + getStatusHeight()
-        toolbar.layoutParams = lp
 
         binding.apply {
             ivBack.setOnClickListener { finish() }
