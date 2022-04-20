@@ -1,44 +1,29 @@
 package com.oneclean.android.booster.logic.ad
 
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.oneclean.android.booster.OneCleanerApplication
 
-
-object AdManager {
-    //插屏广告
+class AdManager2 {
     var interstitialAd: InterstitialAd? = null
-        private set
+    var receiver: AppCompatActivity? = null
 
-    private var hashSet = hashSetOf<AppCompatActivity>()
-
-    /**
-     * 当请求加载广告的页面执行stop（切换到其他页面）时执行
-     *
-     * */
-    fun remove(activity: AppCompatActivity) {
-        hashSet.remove(activity)
-    }
-
-    /**
-     * 加载广告
-     *
-     * */
     fun loadInterstitialAd(
         receiver: AppCompatActivity,
         success: (interstitialAd: InterstitialAd) -> Unit,
         fail: (() -> Unit)?,
+        adUnitId: String = "ca-app-pub-3940256099942544/1033173712",
         closeAd: (() -> Unit)? = null
     ) {
-        //添加接收者
-        hashSet.add(receiver)
-        if (interstitialAd != null) {
-            if (hashSet.contains(receiver)) {
-                //请求广告的接收者还未到其他界面 返回缓存的广告，并销毁
-                success(interstitialAd!!)
-            }
-            //显示的页面不是接受页面就直接不管
+        this.receiver = receiver
+
+        if (interstitialAd!=null && this.receiver!=null){
+            success(interstitialAd!!)
             return
         }
 
@@ -46,13 +31,13 @@ object AdManager {
         val adRequest: AdRequest = AdRequest.Builder().build()
 
         InterstitialAd.load(receiver,
-            "ca-app-pub-3940256099942544/1033173712",
+            adUnitId,
             adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
                     //成功加载广告  当前显示页面是请求的页面就正常返回，否则就缓存起来即可
-                    this@AdManager.interstitialAd = interstitialAd
-                    if (hashSet.contains(receiver)) {
+                    this@AdManager2.interstitialAd = interstitialAd
+                    if (this@AdManager2.receiver!=null){
                         success(interstitialAd)
                     }
 
@@ -67,14 +52,18 @@ object AdManager {
                             }
 
                             override fun onAdShowedFullScreenContent() {
-                                this@AdManager.interstitialAd = null
+                                this@AdManager2.interstitialAd = null
+                            }
+
+                            override fun onAdClicked() {
+                                OneCleanerApplication.adActivity?.finish()
                             }
                         }
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     // Handle the error
-                    interstitialAd = null
+                    this@AdManager2.interstitialAd = null
                     fail?.let { it() }
                 }
             })

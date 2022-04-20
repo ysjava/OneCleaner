@@ -2,32 +2,33 @@ package com.oneclean.android.booster.ui.base
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import com.oneclean.android.booster.OneCleanerApplication.Companion.activityList
 import com.oneclean.android.booster.ui.popup.RequestPermissionPopup
 import com.oneclean.android.booster.utils.initWindow
+import com.oneclean.android.booster.utils.logd
 import com.permissionx.guolindev.PermissionX
+import java.util.*
 
 abstract class BaseActivity : AppCompatActivity {
-
-    companion object{
-        var lastActivity: AppCompatActivity? = null
-    }
 
     constructor() : super()
 
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
-
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindow(window)
-        lastActivity = this
+        activityList.add(this)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
@@ -72,5 +73,10 @@ abstract class BaseActivity : AppCompatActivity {
                     fail(deniedList)
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityList.remove(this)
     }
 }

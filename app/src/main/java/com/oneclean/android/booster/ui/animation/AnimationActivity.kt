@@ -13,9 +13,12 @@ import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.core.animation.doOnEnd
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.hi.dhl.binding.viewbind
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityAnimationBinding
+
+import com.oneclean.android.booster.logic.ad.AdManager2
 import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.base.BaseActivity
 
@@ -23,6 +26,7 @@ import com.oneclean.android.booster.ui.cleaned.CleanedActivity
 import com.oneclean.android.booster.ui.home.HomeActivity
 import com.oneclean.android.booster.utils.dp2px
 import com.oneclean.android.booster.utils.getStatusHeight
+import com.oneclean.android.booster.utils.logd
 import java.util.*
 
 class AnimationActivity : BaseActivity(R.layout.activity_animation) {
@@ -90,9 +94,16 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         R.string.optimizing___,
     )
     private var animatorSet: AnimatorSet? = null
+    private var adManager2: AdManager2? = null
     private fun scanningAnim(cleanType: CleanType) {
-        showAppsIcon()
+        //开始加载广告
+        val adManager2 = AdManager2()
+        this.adManager2 = adManager2
+        adManager2.loadInterstitialAd(this, success, fail)
 
+        //AdManager.loadInterstitialAd(this, success, fail)
+
+        showAppsIcon()
         val height = dp2px(330f).toFloat()
         val dp60 = dp2px(60f).toFloat()
 
@@ -183,16 +194,26 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         intent.action = HomeActivity.BROADCAST_ACTION_DISC
         intent.putExtra("CheckedIndex", cleanType.value)
         sendBroadcast(intent)
-        //跳转到加速完成页面
+
+        //显示广告
         val timer = Timer()
         this.timer = timer
         timer.schedule(object : TimerTask() {
             override fun run() {
-                CleanedActivity.startActivity(this@AnimationActivity, cleanType.value)
-                finish()
+                runOnUiThread {
+                    showAd()
+                }
             }
-        }, 1500)
+        }, 500)
 
+        //跳转到加速完成页面
+    }
+
+    private fun showAd() {
+        CleanedActivity.startActivity(this@AnimationActivity, cleanType.value)
+        finish()
+
+        ad?.show(this)
     }
 
     private fun initView(cleanType: CleanType) {
@@ -235,5 +256,15 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         super.onStop()
         animatorSet?.cancel()
         timer?.cancel()
+        adManager2?.receiver = null
     }
+
+    private var ad: InterstitialAd? = null
+    private val success: (ad: InterstitialAd) -> Unit = {
+        ad = it
+    }
+    private val fail: () -> Unit = {
+        adManager2?.loadInterstitialAd(this, success, null)
+    }
+
 }

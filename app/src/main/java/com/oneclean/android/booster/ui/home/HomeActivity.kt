@@ -67,7 +67,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         super.onCreate(savedInstanceState)
         initCleanType()
         initView()
-
+        "生命周期 ：onCreate ".logd("HVWJQHRQVJHJ")
         //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         val lp = toolbar.layoutParams
@@ -81,8 +81,6 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
             temp = 1
             requestPermission(reqSuccess, reqFail, for11RequestFail)
         }
-
-        initAnimation()
     }
 
     private fun initView() {
@@ -215,7 +213,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
     override fun onStart() {
         super.onStart()
-
+        initAnimation()
         // 通过SharedPreference获取是否刷新
         val isRefresh = getBoolean(this, "is_refresh", false)
 
@@ -333,6 +331,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         //界面不可见时取消动画
         binding.ivHomeOuterCircle.animation.cancel()
     }
+
 
     /**
      * 清理类型的对象类

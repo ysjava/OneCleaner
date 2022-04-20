@@ -1,14 +1,21 @@
 package com.oneclean.android.booster
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
+import com.google.android.gms.ads.AdActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.launcher.LauncherActivity
 import com.oneclean.android.booster.utils.getLong
+import com.oneclean.android.booster.utils.logd
 import com.oneclean.android.booster.utils.putBoolean
+import java.util.*
 
 class OneCleanerApplication : Application() {
     private var stopTime: Long = 0
@@ -19,6 +26,9 @@ class OneCleanerApplication : Application() {
 
         @SuppressLint("StaticFieldLeak")
         lateinit var instance: OneCleanerApplication
+
+        val activityList = LinkedList<BaseActivity?>()
+        var adActivity: AdActivity? = null
     }
 
     override fun onCreate() {
@@ -26,15 +36,49 @@ class OneCleanerApplication : Application() {
         context = applicationContext
         instance = this
 
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                if (activity is AdActivity)
+                    adActivity = activity
+            }
+
+            override fun onActivityStarted(activity: Activity) {
+
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+            }
+
+            override fun onActivityDestroyed(activity: Activity) {
+                if (activity is AdActivity)
+                    adActivity = null
+            }
+
+        })
+
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) {
                 super.onStart(owner)
 
                 //热启动 超过5s就加载启动页
-                BaseActivity.lastActivity?.let {
-                    val t = System.currentTimeMillis() - stopTime
-                    if ((t / 1000) > 5)
-                        it.startActivity(Intent(it, LauncherActivity::class.java))
+                if (activityList.size > 0) {
+                    activityList.last?.let {
+                        val t = System.currentTimeMillis() - stopTime
+                        if ((t / 1000) > 5)
+                            it.startActivity(Intent(it, LauncherActivity::class.java))
+                    }
                 }
 
                 //每次启动应用就去判断时间是否超过15

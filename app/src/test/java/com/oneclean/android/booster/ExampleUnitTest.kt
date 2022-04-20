@@ -9,19 +9,22 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.io.File
 import java.time.LocalDate
+import java.util.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+data class TES(var number: Int)
 class ExampleUnitTest {
     val fakeDataList = mutableListOf<Long>()
     @Test
     fun addition_isCorrect() {
-        generateData()
 
     }
+
+
 
     fun generateData() {
         /*
