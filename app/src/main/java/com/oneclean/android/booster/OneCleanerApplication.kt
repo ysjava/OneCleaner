@@ -6,10 +6,9 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.google.android.gms.ads.AdActivity
+import com.oneclean.android.booster.logic.ad.AdManager2
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.launcher.LauncherActivity
 import com.oneclean.android.booster.utils.getLong
@@ -29,15 +28,20 @@ class OneCleanerApplication : Application() {
 
         val activityList = LinkedList<BaseActivity?>()
         var adActivity: AdActivity? = null
+
+        //当去获取权限时取消热启动计时
+        var cancelTime = false
     }
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
         instance = this
+        AdManager2.initData()
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                "onActivityCreated : onActivityCreated : $activity".logd("LAWHLAWH")
                 if (activity is AdActivity)
                     adActivity = activity
             }
@@ -51,7 +55,6 @@ class OneCleanerApplication : Application() {
             }
 
             override fun onActivityPaused(activity: Activity) {
-
             }
 
             override fun onActivityStopped(activity: Activity) {
@@ -75,9 +78,16 @@ class OneCleanerApplication : Application() {
                 //热启动 超过5s就加载启动页
                 if (activityList.size > 0) {
                     activityList.last?.let {
+                        //如果是去获取权限，则不走热启动
+
+                        if (cancelTime) return
+                        if (adActivity != null) return
                         val t = System.currentTimeMillis() - stopTime
-                        if ((t / 1000) > 5)
+
+                        if ((t / 1000) > 5) {
+                            adActivity?.finish()
                             it.startActivity(Intent(it, LauncherActivity::class.java))
+                        }
                     }
                 }
 
@@ -95,6 +105,10 @@ class OneCleanerApplication : Application() {
 
             override fun onStop(owner: LifecycleOwner) {
                 super.onStop(owner)
+
+                if (adActivity != null) return
+                //如果是去获取权限，则不走热启动
+                if (cancelTime) return
                 stopTime = System.currentTimeMillis()
             }
         })

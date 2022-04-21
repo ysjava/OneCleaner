@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.oneclean.android.booster.OneCleanerApplication
 import com.oneclean.android.booster.R
+import com.oneclean.android.booster.logic.ad.AdManager
 
-import com.oneclean.android.booster.logic.ad.AdManager2
 import com.oneclean.android.booster.ui.home.HomeActivity
 
 class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
@@ -19,7 +19,8 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
     private lateinit var tvProgress: TextView
     private lateinit var progressBar: ProgressBar
     private var animator: ObjectAnimator? = null
-    private var adManager2: AdManager2? = null
+
+    //    private var adManager2: AdManager2? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         //系统启动页有图片
         window.setBackgroundDrawable(null)
@@ -36,12 +37,17 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
         //没有缓存 初始时长10s，否则就3s。 收到成功通知0.5s执行完loading， 收到失败通知，先重试一次： 成功->0.5s加载完成loading； 失败->等待正常的10s走完
         //收到成功的通知，取消原动画，执行新动画
         //开始请求广告
-        val adManager2 = AdManager2()
-        this.adManager2 = adManager2
-        adManager2.loadInterstitialAd(this, loadAdSuccess, loadAdFail)
+        //val isLoadAd = AdManager2.adLoadCheck()
+        val isLoadAd = AdManager.adLoadCheck()
+        if (isLoadAd) {
+//            val adManager2 = AdManager2()
+//            this.adManager2 = adManager2
+//            adManager2.loadInterstitialAd(this, loadAdSuccess, loadAdFail, adIndex = 1)
+            AdManager.loadInterstitialAd(this, loadAdSuccess, loadAdFail, adIndex = 1)
+        }
 
         val animator = ObjectAnimator.ofInt(progressBar, "progress", 0, 100)
-        animator.duration = 10000
+        animator.duration = if (isLoadAd) 10000 else 3000
         animator.interpolator = LinearInterpolator()
         animator.start()
         this.animator = animator
@@ -81,7 +87,8 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
 
     private fun cancel() {
         animator?.cancel()
-        adManager2?.receiver = null
+//        adManager2?.receiver = null
+        AdManager.remove(this)
         newAnimator?.cancel()
         resumeAnimator?.cancel()
     }
@@ -102,7 +109,8 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
                 if (progress2 >= 100) {
                     //加载到100还没请求到广告就直接跳转了
                     end()
-                    adManager2?.interstitialAd?.show(this)
+                    //adManager2?.interstitialAd?.show(this)
+                    AdManager.interstitialAd?.show(this)
                 }
             }
         }
@@ -139,7 +147,8 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
 
     private val loadAdFail: () -> Unit = {
         //重试一次
-        adManager2?.loadInterstitialAd(this, loadAdSuccess, null)
+        //adManager2?.loadInterstitialAd(this, loadAdSuccess, null, adIndex = 1)
+        AdManager.loadInterstitialAd(this,loadAdSuccess, null, adIndex = 1)
     }
 
     private fun end() {

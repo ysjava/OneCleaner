@@ -11,14 +11,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.StringRes
+import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import com.bumptech.glide.Glide
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.hi.dhl.binding.viewbind
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityAnimationBinding
+import com.oneclean.android.booster.logic.ad.AdManager
 
-import com.oneclean.android.booster.logic.ad.AdManager2
 import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.base.BaseActivity
 
@@ -26,7 +27,6 @@ import com.oneclean.android.booster.ui.cleaned.CleanedActivity
 import com.oneclean.android.booster.ui.home.HomeActivity
 import com.oneclean.android.booster.utils.dp2px
 import com.oneclean.android.booster.utils.getStatusHeight
-import com.oneclean.android.booster.utils.logd
 import java.util.*
 
 class AnimationActivity : BaseActivity(R.layout.activity_animation) {
@@ -94,12 +94,16 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         R.string.optimizing___,
     )
     private var animatorSet: AnimatorSet? = null
-    private var adManager2: AdManager2? = null
+//    private var adManager2: AdManager2? = null
+    private var animatorSetCancelTag = false
     private fun scanningAnim(cleanType: CleanType) {
         //开始加载广告
-        val adManager2 = AdManager2()
-        this.adManager2 = adManager2
-        adManager2.loadInterstitialAd(this, success, fail)
+        if (AdManager.adLoadCheck()){
+//            val adManager2 = AdManager2()
+//            this.adManager2 = adManager2
+//            adManager2.loadInterstitialAd(this, success, fail, adIndex = 3)
+            AdManager.loadInterstitialAd(this, success, fail, adIndex = 3)
+        }
 
         //AdManager.loadInterstitialAd(this, success, fail)
 
@@ -123,7 +127,15 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         animatorSet.start()
 
         var count = 1
+        animatorSet.doOnCancel {
+            animatorSetCancelTag = true
+        }
         animatorSet.doOnEnd {
+            if (animatorSetCancelTag) {
+                animatorSetCancelTag = false
+                return@doOnEnd
+            }
+
             if (count <= 2) {
                 animatorSet.start()
                 count++
@@ -142,6 +154,7 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
 
     private fun showAppsIcon() {
         val infoList = getShowAppInfoList()
+
         for (i in infoList.indices) {
             val info = infoList[i]
 
@@ -159,7 +172,7 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
                     }
                 }
 
-            }, i * 100L)
+            }, kotlin.math.min(3000, ((i + 1) * (200L..500L).random())))
         }
     }
 
@@ -256,7 +269,8 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         super.onStop()
         animatorSet?.cancel()
         timer?.cancel()
-        adManager2?.receiver = null
+//        adManager2?.receiver = null
+        AdManager.remove(this)
     }
 
     private var ad: InterstitialAd? = null
@@ -264,7 +278,8 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         ad = it
     }
     private val fail: () -> Unit = {
-        adManager2?.loadInterstitialAd(this, success, null)
+        //adManager2?.loadInterstitialAd(this, success, null, adIndex = 3)
+        AdManager.loadInterstitialAd(this, success, null, adIndex = 3)
     }
 
 }

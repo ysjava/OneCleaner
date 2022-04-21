@@ -2,21 +2,19 @@ package com.oneclean.android.booster.ui.base
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ActivityManager
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import com.oneclean.android.booster.OneCleanerApplication.Companion.activityList
+import com.oneclean.android.booster.ui.popup.For11RequestFailPopup
+import com.oneclean.android.booster.ui.popup.ForwardToSettingsPopup
 import com.oneclean.android.booster.ui.popup.RequestPermissionPopup
 import com.oneclean.android.booster.utils.initWindow
 import com.oneclean.android.booster.utils.logd
 import com.permissionx.guolindev.PermissionX
-import java.util.*
 
 abstract class BaseActivity : AppCompatActivity {
 
@@ -51,14 +49,16 @@ abstract class BaseActivity : AppCompatActivity {
             )
             .explainReasonBeforeRequest()
             .onExplainRequestReason { scope, deniedList ->
-                scope.showRequestReasonDialog(RequestPermissionPopup(this, "message", deniedList))
+                val dialog = RequestPermissionPopup(this, "message", deniedList)
+                scope.showRequestReasonDialog(dialog)
             }
             .onForwardToSettings { scope, deniedList ->
-                scope.showForwardToSettingsDialog(
-                    deniedList,
+                val dialog = ForwardToSettingsPopup(this,deniedList,
                     "You need to manually open the permission in the application settings",
                     "I understand",
-                    "Cancel"
+                    "Cancel",-1,-1)
+                scope.showForwardToSettingsDialog(
+                    dialog
                 )
             }
             .request { allGranted, grantedList, deniedList ->

@@ -7,6 +7,8 @@ import android.view.View
 import com.hi.dhl.binding.viewbind
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityCleanedBinding
+import com.oneclean.android.booster.logic.ad.AdManager
+//import com.oneclean.android.booster.logic.ad.AdManager2
 import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
@@ -43,6 +45,37 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
                 arrayOf("\nJunk Cleaned", "\nPhone Boosted", "\nBattery Saved", "\nCPU Cooled")
             tvCenterName.text = centerNames[cleanType.value]
         }
+
+        if (!AdManager.adLoadCheck()) return
+
+//        val adManager2 = AdManager2()
+//        this.adManager2 = adManager2
+//        adManager2.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener, 4)
+        AdManager.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener, 4)
+    }
+
+//    private var adManager2: AdManager2? = null
+
+    private val adClickedListener: () -> Unit = {
+        //先销毁广告
+        binding.layFrame.removeAllViews()
+
+        if (AdManager.adLoadCheck())
+//            adManager2?.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener2, 4)
+            AdManager.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener2, 4)
+    }
+
+    private val adClickedListener2: () -> Unit = {
+        //先销毁广告
+        binding.layFrame.removeAllViews()
+
+//        if (AdManager2.adLoadCheck())
+//            adManager2?.loadNativeAd(
+//                this,
+//                R.layout.cell_cleaned_ad_native,
+//                this.adClickedListener,
+//                4
+//            )
     }
 
     private fun initView() {
@@ -82,4 +115,9 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
         finish()
     }
 
+    override fun onStop() {
+        super.onStop()
+//        adManager2?.receiver = null
+        AdManager.remove(this)
+    }
 }

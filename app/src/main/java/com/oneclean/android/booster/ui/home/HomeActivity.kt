@@ -15,17 +15,28 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.hi.dhl.binding.viewbind
 import com.lxj.xpopup.XPopup
+import com.oneclean.android.booster.OneCleanerApplication
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityHomeBinding
+import com.oneclean.android.booster.logic.ad.AdManager
+//import com.oneclean.android.booster.logic.ad.AdManager2
 import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
 import com.oneclean.android.booster.ui.popup.RatingUsPopup
 import com.oneclean.android.booster.utils.*
+import kotlin.math.log
 
+/*
+*
+* 授权不走热启动
+* 缓存
+*
+* */
 class HomeActivity : BaseActivity(R.layout.activity_home) {
     private val binding: ActivityHomeBinding by viewbind()
 
@@ -62,18 +73,24 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     /**清理的类别*/
     private val cleanTypeStrArray = arrayOf("CLEAN", "BOOSTER", "SAVER", "COOLER")
     val cleanTypes = mutableListOf<Clean>()
-
+//    private var adManager2: AdManager2? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initCleanType()
         initView()
-        "生命周期 ：onCreate ".logd("HVWJQHRQVJHJ")
         //toolbar更新下高度，加上状态栏的高度，这个操作可以定义个父类来做
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         val lp = toolbar.layoutParams
         lp.height = lp.height + getStatusHeight()
         toolbar.layoutParams = lp
 
+        if (AdManager.adLoadCheck()) {
+            //加载广告
+//            val adManager2 = AdManager2()
+//            this.adManager2 = adManager2
+//            adManager2.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+        }
         registerReceiver(CleanCheckedBroadcastReceiver(), IntentFilter(BROADCAST_ACTION_DISC))
         //Junk Clean-> Phone Booster-> Battery Saver-> CPU Cooler
 
@@ -83,13 +100,31 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         }
     }
 
+    private val adClickedListener: () -> Unit = {
+        //先销毁广告
+        binding.layFrame.removeAllViews()
+        if (AdManager.adLoadCheck()) {
+//            adManager2?.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener2, 2)
+            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener2, 2)
+        }
+    }
+
+    private val adClickedListener2: () -> Unit = {
+        //先销毁广告
+        binding.layFrame.removeAllViews()
+//        if (AdManager2.adLoadCheck())
+//            adManager2?.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+    }
+
     private fun initView() {
         binding.apply {
             cvPhoneBooster.setOnClickListener { performStartActivity(CleanType.BOOSTER) }
             cvBatterySaver.setOnClickListener { performStartActivity(CleanType.SAVER) }
             cvCpuCooler.setOnClickListener { performStartActivity(CleanType.COOLER) }
             cvJunkClean.setOnClickListener { performStartActivity(CleanType.CLEAN) }
-            ivDrawer.setOnClickListener { layDrawer.openDrawer(GravityCompat.START) }
+            ivDrawer.setOnClickListener {
+                layDrawer.openDrawer(GravityCompat.START)
+            }
             ivClose.setOnClickListener { layDrawer.close() }
             cvRatingUs.setOnClickListener {
                 XPopup.Builder(this@HomeActivity)
@@ -130,6 +165,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     /**启动activity*/
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            OneCleanerApplication.cancelTime = false
             requestPermission(reqSuccess, reqFail)
         }
 
@@ -153,6 +189,9 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
                 intent.data = uri
                 startForResult.launch(intent)
                 temp = 0
+
+                //我跑去申请权限了，你就不要给我热启动了
+                OneCleanerApplication.cancelTime = true
             }
         }
     }
@@ -165,6 +204,9 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
             val uri = Uri.fromParts("package", packageName, null)
             intent.data = uri
             startForResult.launch(intent)
+
+            //我跑去申请权限了，你就不要给我热启动了
+            OneCleanerApplication.cancelTime = true
         } else {
             performRealStartActivity()
         }
@@ -172,6 +214,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
     /**为了让点击页面下方四个按钮能权限验证完成后，能正常的执行跳转*/
     private var requestPermissionIndex = CleanType.NOTHING
+
 
     /**
      * 真实的执行activity跳转
@@ -209,6 +252,18 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         animation.repeatCount = -1
         binding.ivHomeOuterCircle.animation = animation
         animation.start()
+    }
+
+
+    override fun onRestart() {
+        super.onRestart()
+        if (AdManager.adLoadCheck()) {
+            //加载广告
+//            val adManager2 = AdManager2()
+//            this.adManager2 = adManager2
+//            adManager2.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+        }
     }
 
     override fun onStart() {
@@ -294,6 +349,8 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         super.onResume()
         //恢复主按钮动画
         binding.ivHomeOuterCircle.animation.start()
+
+        //if (!AdManager.adLoadCheck()) binding.layFrame.removeAllViews()
     }
 
     private fun initCleanType() {
@@ -330,6 +387,9 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         super.onStop()
         //界面不可见时取消动画
         binding.ivHomeOuterCircle.animation.cancel()
+        //界面不可见   接收者置空
+        //adManager2?.receiver = null
+        AdManager.remove(this)
     }
 
 

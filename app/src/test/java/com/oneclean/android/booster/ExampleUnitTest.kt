@@ -1,14 +1,9 @@
 package com.oneclean.android.booster
 
 
-import android.util.Log
-import com.oneclean.android.booster.ui.base.TestActivity
-import com.oneclean.android.booster.utils.logd
-import org.junit.Test
-
 import org.junit.Assert.*
-import java.io.File
-import java.time.LocalDate
+import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -21,7 +16,8 @@ class ExampleUnitTest {
     val fakeDataList = mutableListOf<Long>()
     @Test
     fun addition_isCorrect() {
-
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        System.out.println(formatter.format(Date()))
     }
 
 

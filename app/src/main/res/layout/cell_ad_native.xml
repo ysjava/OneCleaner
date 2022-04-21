@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_home_ad_cell"
+        android:padding="10dp">
+
+        <com.oneclean.android.booster.widget.RoundAngleImageView
+            android:id="@+id/iv_ad_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/nn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_head_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:enabled="false"
+            android:text="Boom Beach"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/iv_ad_icon"
+            app:layout_constraintTop_toTopOf="@id/iv_ad_icon" />
+
+        <TextView
+            android:layout_width="22dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/bg_ad_tag"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="AD"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_head_line"
+            app:layout_constraintStart_toEndOf="@id/tv_head_line"
+            app:layout_constraintTop_toTopOf="@id/tv_head_line" />
+
+        <TextView
+            android:id="@+id/tv_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
+            android:enabled="false"
+            android:maxLines="1"
+            android:text="Start building your all islar…"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/tv_call_action"
+            app:layout_constraintStart_toStartOf="@id/tv_head_line"
+            app:layout_constraintTop_toBottomOf="@id/tv_head_line" />
+
+        <TextView
+            android:id="@+id/tv_call_action"
+            android:layout_width="73dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_ad_install"
+            android:gravity="center"
+            android:text="Install"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.gms.ads.nativead.NativeAdView>

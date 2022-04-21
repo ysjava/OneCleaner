@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F9FAFA"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -198,6 +199,16 @@
                         android:textColor="#2FD9C8"
                         android:textSize="14sp" />
                 </RelativeLayout>
+
+                <FrameLayout
+                    android:id="@+id/lay_frame"
+                    android:layout_width="match_parent"
+                    android:animateLayoutChanges="true"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_cleaned_cell">
+                </FrameLayout>
 
                 <RelativeLayout
                     android:id="@+id/lay_junk"

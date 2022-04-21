@@ -1,11 +1,15 @@
 package com.oneclean.android.booster.ui.popup
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.oneclean.android.booster.OneCleanerApplication
 import com.oneclean.android.booster.R
+import com.oneclean.android.booster.utils.logd
 import com.permissionx.guolindev.dialog.RationaleDialog
 
 class RequestPermissionPopup(
@@ -25,6 +29,7 @@ class RequestPermissionPopup(
 
         tvClose = findViewById(R.id.tv_close)
         tvRequest = findViewById(R.id.tv_request)
+
         window?.let {
             val param = it.attributes
             val width = (context.resources.displayMetrics.widthPixels * 0.8).toInt()
