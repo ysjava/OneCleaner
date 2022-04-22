@@ -15,28 +15,19 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import com.hi.dhl.binding.viewbind
 import com.lxj.xpopup.XPopup
 import com.oneclean.android.booster.OneCleanerApplication
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityHomeBinding
 import com.oneclean.android.booster.logic.ad.AdManager
-//import com.oneclean.android.booster.logic.ad.AdManager2
 import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
 import com.oneclean.android.booster.ui.popup.RatingUsPopup
 import com.oneclean.android.booster.utils.*
-import kotlin.math.log
 
-/*
-*
-* 授权不走热启动
-* 缓存
-*
-* */
 class HomeActivity : BaseActivity(R.layout.activity_home) {
     private val binding: ActivityHomeBinding by viewbind()
 
@@ -86,9 +77,6 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
         if (AdManager.adLoadCheck()) {
             //加载广告
-//            val adManager2 = AdManager2()
-//            this.adManager2 = adManager2
-//            adManager2.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
             AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
         }
         registerReceiver(CleanCheckedBroadcastReceiver(), IntentFilter(BROADCAST_ACTION_DISC))
@@ -110,10 +98,10 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     }
 
     private val adClickedListener2: () -> Unit = {
-        //先销毁广告
+        //销毁广告
         binding.layFrame.removeAllViews()
-//        if (AdManager2.adLoadCheck())
-//            adManager2?.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+//        if (AdManager.adLoadCheck())
+//            AdManager?.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
     }
 
     private fun initView() {
@@ -165,7 +153,9 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     /**启动activity*/
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            OneCleanerApplication.cancelTime = false
+            "registerForActivityResultregisterForActivityResult".logd("LAWHLAWH")
+            OneCleanerApplication.isRequestPermissionBack = true
+            putBoolean(this,"isRequestPermissionBack",true,"hot_load")
             requestPermission(reqSuccess, reqFail)
         }
 
@@ -191,7 +181,9 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
                 temp = 0
 
                 //我跑去申请权限了，你就不要给我热启动了
+                "for11RequestFailfor11RequestFail".logd("LAWHLAWH")
                 OneCleanerApplication.cancelTime = true
+                putBoolean(this,"cancelTime",true,"hot_load")
             }
         }
     }
@@ -207,6 +199,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
             //我跑去申请权限了，你就不要给我热启动了
             OneCleanerApplication.cancelTime = true
+            putBoolean(this,"cancelTime",true,"hot_load")
         } else {
             performRealStartActivity()
         }

@@ -6,14 +6,17 @@ import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import com.oneclean.android.booster.OneCleanerApplication
 import com.oneclean.android.booster.OneCleanerApplication.Companion.activityList
 import com.oneclean.android.booster.ui.popup.For11RequestFailPopup
 import com.oneclean.android.booster.ui.popup.ForwardToSettingsPopup
 import com.oneclean.android.booster.ui.popup.RequestPermissionPopup
 import com.oneclean.android.booster.utils.initWindow
 import com.oneclean.android.booster.utils.logd
+import com.oneclean.android.booster.utils.putBoolean
 import com.permissionx.guolindev.PermissionX
 
 abstract class BaseActivity : AppCompatActivity {
@@ -57,9 +60,15 @@ abstract class BaseActivity : AppCompatActivity {
                     "You need to manually open the permission in the application settings",
                     "I understand",
                     "Cancel",-1,-1)
-                scope.showForwardToSettingsDialog(
-                    dialog
-                )
+                scope.showForwardToSettingsDialog(dialog,{
+                    //获取权限去了  暂停热启动逻辑
+                    OneCleanerApplication.cancelTime = true
+                    putBoolean(this,"cancelTime",true,"hot_load")
+                },{
+                    //处理完成回到这里  恢复
+                    OneCleanerApplication.isRequestPermissionBack = true
+                    putBoolean(this,"isRequestPermissionBack",true,"hot_load")
+                })
             }
             .request { allGranted, grantedList, deniedList ->
                 if (allGranted) {

@@ -13,6 +13,7 @@ import com.oneclean.android.booster.R
 import com.oneclean.android.booster.logic.ad.AdManager
 
 import com.oneclean.android.booster.ui.home.HomeActivity
+import com.oneclean.android.booster.utils.logd
 
 class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
 
@@ -36,34 +37,31 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
 
         //没有缓存 初始时长10s，否则就3s。 收到成功通知0.5s执行完loading， 收到失败通知，先重试一次： 成功->0.5s加载完成loading； 失败->等待正常的10s走完
         //收到成功的通知，取消原动画，执行新动画
-        //开始请求广告
-        //val isLoadAd = AdManager2.adLoadCheck()
+
         val isLoadAd = AdManager.adLoadCheck()
         if (isLoadAd) {
-//            val adManager2 = AdManager2()
-//            this.adManager2 = adManager2
-//            adManager2.loadInterstitialAd(this, loadAdSuccess, loadAdFail, adIndex = 1)
+            "开始加载".logd("TTTESTE")
             AdManager.loadInterstitialAd(this, loadAdSuccess, loadAdFail, adIndex = 1)
         }
 
-        val animator = ObjectAnimator.ofInt(progressBar, "progress", 0, 100)
-        animator.duration = if (isLoadAd) 10000 else 3000
-        animator.interpolator = LinearInterpolator()
-        animator.start()
-        this.animator = animator
-        //开始请求广告
-//        AdManager.loadInterstitialAd(this, loadAdSuccess, loadAdFail)
-
-        animator.addUpdateListener {
-            val str = getString(R.string.loading___) + it.animatedValue + "%"
-            tvProgress.text = str
-            val progress = it.animatedValue as Int
-            if (progress >= 100) {
-                //加载到100还没请求到广告就直接跳转了
-                end()
+        if (!AdManager.checkCache(1)) {
+            "动画执行1111".logd("TTTESTE")
+            val animator = ObjectAnimator.ofInt(progressBar, "progress", 0, 100)
+            animator.duration = if (isLoadAd) 10000 else 3000
+            animator.interpolator = LinearInterpolator()
+            animator.start()
+            this.animator = animator
+            animator.addUpdateListener {
+                "动画监听1111 ${it.animatedValue}".logd("TTTESTE")
+                val str = getString(R.string.loading___) + progressBar.progress + "%"
+                tvProgress.text = str
+                val progress = it.animatedValue as Int
+                if (progress >= 100) {
+                    //加载到100还没请求到广告就直接跳转了
+                    end(1)
+                }
             }
         }
-
 
     }
 
@@ -73,8 +71,6 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
     }
 
     override fun onStop() {
-        //activity不在主页面了，就从集合中移去，这样就不会在加载广告到该页面了
-        //AdManager.remove(this)
         cancel()
         super.onStop()
     }
@@ -87,32 +83,42 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
 
     private fun cancel() {
         animator?.cancel()
-//        adManager2?.receiver = null
         AdManager.remove(this)
         newAnimator?.cancel()
+        this.newAnimator = null
         resumeAnimator?.cancel()
     }
 
     override fun onResume() {
-        val b = animator?.isRunning ?: false
-        if (!b) {
-            val progress = progressBar.progress
-            val resumeAnimator = ObjectAnimator.ofInt(progressBar, "progress", progress, 100)
-            resumeAnimator.duration = ((3..6).random() * 1000).toLong()
-            resumeAnimator.start()
-            this.resumeAnimator = resumeAnimator
 
-            resumeAnimator.addUpdateListener {
-                val str = getString(R.string.loading___) + it.animatedValue + "%"
-                tvProgress.text = str
-                val progress2 = it.animatedValue as Int
-                if (progress2 >= 100) {
-                    //加载到100还没请求到广告就直接跳转了
-                    end()
-                    //adManager2?.interstitialAd?.show(this)
-                    AdManager.interstitialAd?.show(this)
+        if (!AdManager.checkCache(1)) {
+            "onResume   ${AdManager.interstitialAd}".logd("kugqkfgkabak")
+            val b = animator?.isRunning ?: false
+            if (!b) {
+                "动画执行2222".logd("TTTESTE")
+                val progress = progressBar.progress
+                val resumeAnimator = ObjectAnimator.ofInt(progressBar, "progress", progress, 100)
+                resumeAnimator.duration = ((3..6).random() * 1000).toLong()
+                resumeAnimator.start()
+                this.resumeAnimator = resumeAnimator
+
+                resumeAnimator.addUpdateListener {
+                    "动画监听2222 ${it.animatedValue}".logd("TTTESTE")
+                    val str = getString(R.string.loading___) + it.animatedValue + "%"
+                    tvProgress.text = str
+                    val progress2 = it.animatedValue as Int
+                    if (progress2 >= 100) {
+                        //加载到100还没请求到广告就直接跳转了
+
+                        end(2)
+                        //if (AdManager.checkReceiver(this))
+                            AdManager.interstitialAd?.show(this)
+                    }
                 }
             }
+        } else {
+            "onResume   ${AdManager.interstitialAd}".logd("kugqkfgkabak")
+            AdManager.interstitialAd?.let { loadAdSuccess(AdManager.interstitialAd!!) }
         }
 
         super.onResume()
@@ -123,35 +129,36 @@ class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
 
     private val loadAdSuccess: (interstitialAd: InterstitialAd) -> Unit = { ad ->
         //显示广告前先让loading在1s 结束
-
         animator?.cancel()
         val progress = progressBar.progress
         val newAnimator = ObjectAnimator.ofInt(progressBar, "progress", progress, 100)
-        newAnimator.duration = 1000
+        newAnimator.duration = 2000
         newAnimator.start()
+        "动画执行333333".logd("TTTESTE")
         this.newAnimator = newAnimator
         newAnimator.addUpdateListener {
-            val str = getString(R.string.loading___) + it.animatedValue + "%"
+            val str = getString(R.string.loading___) + progressBar.progress + "%"
             tvProgress.text = str
+            val v = newAnimator.animatedValue as Int
+            "动画监听333333".logd("TTTESTE")
+            if (v >= 100 && this.newAnimator?.isRunning == true) {
 
-            val v = it.animatedValue as Int
-            if (v >= 100) {
-                end()
+                end(3)
                 //动画结束，开始show广告
-                ad.show(this)
+                //if (AdManager.checkReceiver(this))
+                    ad.show(this@LauncherActivity)
             }
         }
 
     }
 
-
     private val loadAdFail: () -> Unit = {
         //重试一次
         //adManager2?.loadInterstitialAd(this, loadAdSuccess, null, adIndex = 1)
-        AdManager.loadInterstitialAd(this,loadAdSuccess, null, adIndex = 1)
+        AdManager.loadInterstitialAd(this, loadAdSuccess, null, adIndex = 1)
     }
 
-    private fun end() {
+    private fun end(int: Int) {
         if (OneCleanerApplication.activityList.size == 0) {
             startActivity(Intent(this@LauncherActivity, HomeActivity::class.java))
         }

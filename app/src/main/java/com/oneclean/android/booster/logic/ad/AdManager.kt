@@ -15,6 +15,7 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.oneclean.android.booster.OneCleanerApplication
 import com.oneclean.android.booster.R
+import com.oneclean.android.booster.logic.enums.AdName
 import com.oneclean.android.booster.utils.getInt
 import com.oneclean.android.booster.utils.getString
 import com.oneclean.android.booster.utils.logd
@@ -40,9 +41,13 @@ private var totalAdClickNumber = 0
 
 object AdManager {
     var interstitialAd: InterstitialAd? = null
+    var interstitialAd2: InterstitialAd? = null
     var nativeAd: NativeAd? = null
+    var nativeAd2: NativeAd? = null
     private var hashSet = hashSetOf<AppCompatActivity>()
-
+    fun checkReceiver(receiver: AppCompatActivity):Boolean{
+        return hashSet.contains(receiver)
+    }
     /**
      * 当请求加载广告的页面执行stop（切换到其他页面）时执行
      *
@@ -116,13 +121,21 @@ object AdManager {
         adUnitId: String = "ca-app-pub-3940256099942544/1033173712",
         adIndex: Int
     ) {
+
+        if (isLoadingInterstitialAd) {
+            "当前正在加载原生广告 位置  $adIndex".logd("UGWIUGEIWEUQ")
+            return
+        }
+        isLoadingInterstitialAd = true
         //添加接收者
         hashSet.add(receiver)
-
-        if (interstitialAd != null && hashSet.contains(receiver)) {
+        val cacheAd = if (adIndex == 1) interstitialAd else interstitialAd2
+        if (cacheAd != null && hashSet.contains(receiver)) {
+            "缓存有的".logd("TTTESTE")
             //请求广告的接收者还未到其他界面 返回缓存的广告，并销毁
-            success(interstitialAd!!)
+            success(cacheAd)
             //显示的页面不是接受页面就直接不管
+            isLoadingInterstitialAd = false
             return
         }
 
@@ -137,7 +150,13 @@ object AdManager {
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
                     "插屏广告加载完成： 位置: $adIndex".logd("LJWBNFfjqfn")
                     //成功加载广告  当前显示页面是请求的页面就正常返回，否则就缓存起来即可
-                    this@AdManager.interstitialAd = interstitialAd
+                    if (adIndex == 1) {
+                        AdManager.interstitialAd = interstitialAd
+                    } else {
+                        interstitialAd2 = interstitialAd
+                    }
+
+                    isLoadingInterstitialAd = false
                     if (hashSet.contains(receiver)) {
                         success(interstitialAd)
                     }
@@ -153,7 +172,12 @@ object AdManager {
                             }
 
                             override fun onAdShowedFullScreenContent() {
-                                this@AdManager.interstitialAd = null
+                                if (adIndex == 1) {
+                                    AdManager.interstitialAd = null
+                                } else {
+                                    interstitialAd2 = null
+                                }
+
                                 "插屏广告开始展示： 位置: $adIndex".logd("LJWBNFfjqfn")
                                 setNumber(adIndex, 1)
                             }
@@ -168,35 +192,49 @@ object AdManager {
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     // Handle the error
-                    "插屏广告加载失败 失败： 位置: $adIndex".logd("LJWBNFfjqfn")
-                    interstitialAd = null
+                    "插屏广告加载失败  位置: $adIndex".logd("LJWBNFfjqfn")
+//                    interstitialAd = null
+                    isLoadingInterstitialAd = false
                     fail?.let { it() }
                 }
             })
     }
 
-
+    private var isLoadingNativeAd = false
+    private var isLoadingInterstitialAd = false
     fun loadNativeAd(
         receiver: AppCompatActivity,
         @LayoutRes adCellId: Int,
         adClicked: (() -> Unit)? = null,
         adIndex: Int
     ) {
+        if (isLoadingNativeAd) {
+            "当前正在加载原生广告 位置  $adIndex".logd("UGWIUGEIWEUQ")
+            return
+        }
+        isLoadingNativeAd = true
         //添加接收者
         hashSet.add(receiver)
 
-        if (hashSet.contains(receiver) && nativeAd != null) {
+        val cacheAd = if (adIndex == 2) nativeAd else nativeAd2
+
+        if (hashSet.contains(receiver) && cacheAd != null) {
             val adView =
                 LayoutInflater.from(receiver).inflate(adCellId, null) as NativeAdView
-            populateNativeAdView(nativeAd!!, adView)
+            populateNativeAdView(cacheAd, adView)
             val adFrame = receiver.findViewById<FrameLayout>(R.id.lay_frame)
             adFrame.removeAllViews()
-            "原生广告加载成功 开始显示： 位置: $adIndex".logd("LJWBNFfjqfn")
+            "原生广告加载成功 ==有缓存= 显示： 位置: $adIndex".logd("LJWBNFfjqfn")
+
             adFrame.addView(adView)
             setNumber(adIndex, 1)
 
-            nativeAd = null
-
+            if (adIndex == 2) {
+                nativeAd = null
+            } else {
+                nativeAd2 = null
+            }
+            isLoadingNativeAd = false
             return
         }
 
@@ -204,7 +242,13 @@ object AdManager {
             .forNativeAd { ad: NativeAd ->
                 "原生广告加载成功 位置: $adIndex".logd("LJWBNFfjqfn")
                 //缓存
-                nativeAd = ad
+
+                if (adIndex == 2) {
+                    nativeAd = ad
+                } else {
+                    nativeAd2 = ad
+                }
+                isLoadingNativeAd = false
                 if (!hashSet.contains(receiver)) return@forNativeAd
 
                 val adView =
@@ -212,14 +256,20 @@ object AdManager {
                 populateNativeAdView(ad, adView)
                 val adFrame = receiver.findViewById<FrameLayout>(R.id.lay_frame)
                 adFrame.removeAllViews()
-                //"原生广告加载成功 开始显示： 位置: $adIndex".logd("LJWBNFfjqfn")
+                "原生广告==开始显示： 位置: $adIndex".logd("LJWBNFfjqfn")
                 adFrame.addView(adView)
                 setNumber(adIndex, 1)
-                nativeAd = null
+
+                if (adIndex == 2) {
+                    nativeAd = null
+                } else {
+                    nativeAd2 = null
+                }
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(p0: LoadAdError) {
-                    nativeAd = null
+                    //nativeAd = null
+                    isLoadingNativeAd = false
                 }
 
                 override fun onAdClicked() {
@@ -288,5 +338,74 @@ object AdManager {
         editor.putInt("totalAdClickNumber", totalAdClickNumber)
 
         editor.apply()
+    }
+
+    fun checkCache(index: Int): Boolean {
+        return when (index) {
+            1 -> interstitialAd != null
+            2 -> interstitialAd2 != null
+            3 -> nativeAd != null
+            4 -> nativeAd2 != null
+            else -> false
+        }
+    }
+
+
+    /**
+     * 预加载广告
+     *
+     * @param adName 预加载的广告名字
+     * */
+    fun preloadAd(adName: AdName) {
+        if (adName == AdName.LauncherInterstitialAd || adName == AdName.AnimInterstitialAd)
+            preloadInterstitialAd(adName)
+        else
+            preloadNativeAd(adName)
+    }
+
+    /**
+     * 预加载原生广告
+     * 加载完了缓存就行，其他不用干
+     * */
+    private fun preloadNativeAd(adName: AdName) {
+//        val adLoader = AdLoader.Builder(
+//            OneCleanerApplication.context,
+//            "ca-app-pub-3940256099942544/2247696110"
+//        )
+//            .forNativeAd { ad: NativeAd ->
+//                "原生广告预加载成功 名字: ${adName.name}".logd("LJWBNFfjqfn")
+//                //缓存起来即可
+//                if (adName == AdName.HomeNativeAd) {
+//                    nativeAd = ad
+//                } else {
+//                    nativeAd2 = ad
+//                }
+//            }
+//            .withAdListener(object : AdListener() {
+//                override fun onAdFailedToLoad(p0: LoadAdError) {
+//                    //nativeAd = null
+//                    isLoadingNativeAd = false
+//                }
+//
+//                override fun onAdClicked() {
+//                    super.onAdClicked()
+//                    "原生广告点击： 位置: $adIndex".logd("LJWBNFfjqfn")
+//                    adClicked?.let { adClicked() }
+//                    setNumber(adIndex, 2)
+//                }
+//            })
+//            .withNativeAdOptions(NativeAdOptions.Builder().build())
+//            .build()
+//
+//        "开始加载原生广告： 位置: $adIndex".logd("LJWBNFfjqfn")
+//        adLoader.loadAds(AdRequest.Builder().build(), 1)
+    }
+
+    /**
+     * 预加载插屏广告
+     *
+     * */
+    private fun preloadInterstitialAd(adName: AdName) {
+
     }
 }

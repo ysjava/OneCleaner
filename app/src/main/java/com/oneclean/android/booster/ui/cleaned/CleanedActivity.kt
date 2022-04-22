@@ -14,6 +14,7 @@ import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.junkclean.JunkCleanActivity
 import com.oneclean.android.booster.utils.getStatusHeight
+import com.oneclean.android.booster.utils.logd
 
 class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickListener {
     private val binding: ActivityCleanedBinding by viewbind()
@@ -32,6 +33,12 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
         val value = intent.getIntExtra("CleanTypeValue", -1)
         cleanType = CleanType.switchToTypeByValue(value)
         initView()
+        "CleanedActivity onCreate1111 ".logd("LJWBNFfjqfn")
+        if (AdManager.adLoadCheck()) {
+            "CleanedActivity onCreate22222 ".logd("LJWBNFfjqfn")
+            //加载广告
+            AdManager.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener, 4)
+        }
 
         binding.apply {
             when (cleanType) {
@@ -46,12 +53,6 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
             tvCenterName.text = centerNames[cleanType.value]
         }
 
-        if (!AdManager.adLoadCheck()) return
-
-//        val adManager2 = AdManager2()
-//        this.adManager2 = adManager2
-//        adManager2.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener, 4)
-        AdManager.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener, 4)
     }
 
 //    private var adManager2: AdManager2? = null
@@ -59,7 +60,7 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
     private val adClickedListener: () -> Unit = {
         //先销毁广告
         binding.layFrame.removeAllViews()
-
+        "CleanedActivity adClickedListener : ${AdManager.adLoadCheck()}".logd("LJWBNFfjqfn")
         if (AdManager.adLoadCheck())
 //            adManager2?.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener2, 4)
             AdManager.loadNativeAd(this, R.layout.cell_cleaned_ad_native, adClickedListener2, 4)
@@ -68,14 +69,9 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
     private val adClickedListener2: () -> Unit = {
         //先销毁广告
         binding.layFrame.removeAllViews()
+//        if (AdManager.adLoadCheck())
+//            AdManager.loadNativeAd(this, R.layout.cell_cleaned_ad_native,null, 4)
 
-//        if (AdManager2.adLoadCheck())
-//            adManager2?.loadNativeAd(
-//                this,
-//                R.layout.cell_cleaned_ad_native,
-//                this.adClickedListener,
-//                4
-//            )
     }
 
     private fun initView() {
@@ -119,5 +115,12 @@ class CleanedActivity : BaseActivity(R.layout.activity_cleaned), View.OnClickLis
         super.onStop()
 //        adManager2?.receiver = null
         AdManager.remove(this)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (AdManager.adLoadCheck()){
+            AdManager.loadNativeAd(this,R.layout.cell_cleaned_ad_native,adClickedListener,4)
+        }
     }
 }

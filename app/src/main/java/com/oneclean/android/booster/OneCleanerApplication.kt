@@ -6,11 +6,13 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.google.android.gms.ads.AdActivity
-import com.oneclean.android.booster.logic.ad.AdManager2
+import com.oneclean.android.booster.logic.ad.AdManager
 import com.oneclean.android.booster.ui.base.BaseActivity
 import com.oneclean.android.booster.ui.launcher.LauncherActivity
+import com.oneclean.android.booster.utils.getBoolean
 import com.oneclean.android.booster.utils.getLong
 import com.oneclean.android.booster.utils.logd
 import com.oneclean.android.booster.utils.putBoolean
@@ -31,17 +33,26 @@ class OneCleanerApplication : Application() {
 
         //当去获取权限时取消热启动计时
         var cancelTime = false
+        //是否从权限请求页面回来
+        var isRequestPermissionBack = false
+
     }
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
         instance = this
-        AdManager2.initData()
+        AdManager.initData()
+        cancelTime = getBoolean(this,"cancelTime",false,"hot_load")
+        isRequestPermissionBack = getBoolean(this,"isRequestPermissionBack",false,"hot_load")
+        var launcherActivity: AppCompatActivity? = null
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                "onActivityCreated : onActivityCreated : $activity".logd("LAWHLAWH")
+                if (activity is LauncherActivity) {
+                    //if (launcherActivity!=null) launcherActivity?.finish()
+                    launcherActivity = activity
+                }
                 if (activity is AdActivity)
                     adActivity = activity
             }
@@ -65,6 +76,8 @@ class OneCleanerApplication : Application() {
             }
 
             override fun onActivityDestroyed(activity: Activity) {
+                if (activity === launcherActivity)
+                    launcherActivity = null
                 if (activity is AdActivity)
                     adActivity = null
             }
@@ -74,19 +87,37 @@ class OneCleanerApplication : Application() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) {
                 super.onStart(owner)
-
+                cancelTime = getBoolean(this@OneCleanerApplication,"cancelTime",false,"hot_load")
+                isRequestPermissionBack = getBoolean(this@OneCleanerApplication,"isRequestPermissionBack",false,"hot_load")
                 //热启动 超过5s就加载启动页
                 if (activityList.size > 0) {
                     activityList.last?.let {
                         //如果是去获取权限，则不走热启动
 
+                        if (isRequestPermissionBack){
+                            isRequestPermissionBack = false
+                            cancelTime = false
+                            putBoolean(instance,"cancelTime",false,"hot_load")
+                            putBoolean(instance,"isRequestPermissionBack",false,"hot_load")
+                            return
+                        }
                         if (cancelTime) return
+
                         if (adActivity != null) return
+
                         val t = System.currentTimeMillis() - stopTime
 
                         if ((t / 1000) > 5) {
+                            "执行热启动 。。。 ".logd("WHEUWHWHEQ")
+                            //launcherActivity?.let { launcherActivity!!.finish() }
+
                             adActivity?.finish()
-                            it.startActivity(Intent(it, LauncherActivity::class.java))
+                            if (launcherActivity!=null){
+                                launcherActivity?.startActivity(Intent(launcherActivity, LauncherActivity::class.java))
+                                launcherActivity?.finish()
+                            }else{
+                                it.startActivity(Intent(it, LauncherActivity::class.java))
+                            }
                         }
                     }
                 }
@@ -105,7 +136,7 @@ class OneCleanerApplication : Application() {
 
             override fun onStop(owner: LifecycleOwner) {
                 super.onStop(owner)
-
+                "开始计时 $cancelTime    $isRequestPermissionBack 。。。 ".logd("WHEUWHWHEQ")
                 if (adActivity != null) return
                 //如果是去获取权限，则不走热启动
                 if (cancelTime) return

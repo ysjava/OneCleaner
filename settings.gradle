@@ -12,3 +12,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ONE Cleaner"
 include ':app'
+include ':permissionx'

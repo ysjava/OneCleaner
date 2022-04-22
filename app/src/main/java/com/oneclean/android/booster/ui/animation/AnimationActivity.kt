@@ -77,6 +77,10 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
     }
 
     private fun startAnimationByType(cleanType: CleanType) {
+        //开始加载广告
+        if (AdManager.adLoadCheck()) {
+            AdManager.loadInterstitialAd(this, success, fail, adIndex = 3)
+        }
         if (cleanType == CleanType.CLEAN) {
             binding.ivScanningView.visibility = View.GONE
             binding.lavAnimation.visibility = View.VISIBLE
@@ -94,16 +98,10 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         R.string.optimizing___,
     )
     private var animatorSet: AnimatorSet? = null
-//    private var adManager2: AdManager2? = null
+
+    //    private var adManager2: AdManager2? = null
     private var animatorSetCancelTag = false
     private fun scanningAnim(cleanType: CleanType) {
-        //开始加载广告
-        if (AdManager.adLoadCheck()){
-//            val adManager2 = AdManager2()
-//            this.adManager2 = adManager2
-//            adManager2.loadInterstitialAd(this, success, fail, adIndex = 3)
-            AdManager.loadInterstitialAd(this, success, fail, adIndex = 3)
-        }
 
         //AdManager.loadInterstitialAd(this, success, fail)
 
@@ -152,14 +150,17 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         }
     }
 
+    private var showIconsTimer: Timer? = null
     private fun showAppsIcon() {
         val infoList = getShowAppInfoList()
-
+        binding.layIconContainer.removeAllViews()
         for (i in infoList.indices) {
             val info = infoList[i]
-
-            Timer("hh").schedule(object : TimerTask() {
+            val timer = Timer("hh")
+            this.showIconsTimer = timer
+            timer.schedule(object : TimerTask() {
                 override fun run() {
+                    if (showIconsTimer == null) return
                     val cell = layoutInflater.inflate(
                         R.layout.cell_app_icon,
                         binding.layIconContainer,
@@ -167,6 +168,7 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
                     ) as ImageView
                     val icon = info.loadIcon(packageManager)
                     runOnUiThread {
+                        if (showIconsTimer == null) return@runOnUiThread
                         Glide.with(this@AnimationActivity).load(icon).centerCrop().into(cell)
                         binding.layIconContainer.addView(cell)
                     }
@@ -211,15 +213,20 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         //显示广告
         val timer = Timer()
         this.timer = timer
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                runOnUiThread {
-                    showAd()
-                }
-            }
-        }, 500)
+        adTag = true
+        timer.schedule(showAdTimerTask, 500)
 
         //跳转到加速完成页面
+    }
+
+    private val showAdTimerTask = object : TimerTask() {
+        override fun run() {
+            if (timer == null) return
+            runOnUiThread {
+                if (timer == null) return@runOnUiThread
+                showAd()
+            }
+        }
     }
 
     private fun showAd() {
@@ -269,8 +276,32 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         super.onStop()
         animatorSet?.cancel()
         timer?.cancel()
-//        adManager2?.receiver = null
+        timer = null
+
         AdManager.remove(this)
+        isStop = true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        showIconsTimer?.cancel()
+        showIconsTimer = null
+    }
+
+    private var isStop = false
+    private var adTag = false
+    override fun onResume() {
+        super.onResume()
+
+        if (isStop) {
+            animatorSet?.start()
+        }
+
+        if (ad == null && timer == null && adTag) {
+            val timer = Timer()
+            this.timer = timer
+            timer.schedule(showAdTimerTask, 500)
+        }
     }
 
     private var ad: InterstitialAd? = null
