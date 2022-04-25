@@ -14,11 +14,11 @@ import androidx.annotation.StringRes
 import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import com.bumptech.glide.Glide
-import com.google.android.gms.ads.interstitial.InterstitialAd
+//import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.hi.dhl.binding.viewbind
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityAnimationBinding
-import com.oneclean.android.booster.logic.ad.AdManager
+//import com.oneclean.android.booster.logic.ad.AdManager
 
 import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.base.BaseActivity
@@ -78,9 +78,9 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
 
     private fun startAnimationByType(cleanType: CleanType) {
         //开始加载广告
-        if (AdManager.adLoadCheck()) {
-            AdManager.loadInterstitialAd(this, success, fail, adIndex = 3)
-        }
+//        if (AdManager.adLoadCheck()) {
+//            AdManager.loadInterstitialAd(this, success, fail, adIndex = 3)
+//        }
         if (cleanType == CleanType.CLEAN) {
             binding.ivScanningView.visibility = View.GONE
             binding.lavAnimation.visibility = View.VISIBLE
@@ -233,7 +233,7 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         CleanedActivity.startActivity(this@AnimationActivity, cleanType.value)
         finish()
 
-        ad?.show(this)
+//        ad?.show(this)
     }
 
     private fun initView(cleanType: CleanType) {
@@ -278,7 +278,7 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
         timer?.cancel()
         timer = null
 
-        AdManager.remove(this)
+//        AdManager.remove(this)
         isStop = true
     }
 
@@ -297,20 +297,19 @@ class AnimationActivity : BaseActivity(R.layout.activity_animation) {
             animatorSet?.start()
         }
 
-        if (ad == null && timer == null && adTag) {
-            val timer = Timer()
-            this.timer = timer
-            timer.schedule(showAdTimerTask, 500)
-        }
+//        if (ad == null && timer == null && adTag) {
+//            val timer = Timer()
+//            this.timer = timer
+//            timer.schedule(showAdTimerTask, 500)
+//        }
     }
 
-    private var ad: InterstitialAd? = null
-    private val success: (ad: InterstitialAd) -> Unit = {
-        ad = it
-    }
-    private val fail: () -> Unit = {
-        //adManager2?.loadInterstitialAd(this, success, null, adIndex = 3)
-        AdManager.loadInterstitialAd(this, success, null, adIndex = 3)
-    }
+    //private var ad: InterstitialAd? = null
+//    private val success: (ad: InterstitialAd) -> Unit = {
+//        ad = it
+//    }
+//    private val fail: () -> Unit = {
+//        //AdManager.loadInterstitialAd(this, success, null, adIndex = 3)
+//    }
 
 }

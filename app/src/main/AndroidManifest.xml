@@ -21,30 +21,34 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_app_icon_round"
         android:supportsRtl="true"
+        tools:ignore="LockedOrientationActivity"
         android:theme="@style/Theme.ONECleaner"
         tools:targetApi="r">
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.base.TestActivity"
             android:exported="true">
 
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.home.HomeActivity"
             android:launchMode="singleTop"
             android:exported="true" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.animation.AnimationActivity"
             android:exported="true" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.cleaned.CleanedActivity"
             android:exported="true" />
         <activity
             android:name=".ui.launcher.LauncherActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Launcher"
-            tools:ignore="LockedOrientationActivity">
+            android:theme="@style/Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,12 +56,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.junkclean.JunkCleanActivity"
             android:exported="true" />
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+<!--            android:value=""/>-->
     </application>
 
 </manifest>

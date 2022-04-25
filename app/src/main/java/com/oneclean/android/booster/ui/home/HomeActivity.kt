@@ -20,7 +20,6 @@ import com.lxj.xpopup.XPopup
 import com.oneclean.android.booster.OneCleanerApplication
 import com.oneclean.android.booster.R
 import com.oneclean.android.booster.databinding.ActivityHomeBinding
-import com.oneclean.android.booster.logic.ad.AdManager
 import com.oneclean.android.booster.logic.enums.CleanType
 import com.oneclean.android.booster.ui.animation.AnimationActivity
 import com.oneclean.android.booster.ui.base.BaseActivity
@@ -75,10 +74,10 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         lp.height = lp.height + getStatusHeight()
         toolbar.layoutParams = lp
 
-        if (AdManager.adLoadCheck()) {
-            //加载广告
-            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
-        }
+//        if (AdManager.adLoadCheck()) {
+//            //加载广告
+//            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+//        }
         registerReceiver(CleanCheckedBroadcastReceiver(), IntentFilter(BROADCAST_ACTION_DISC))
         //Junk Clean-> Phone Booster-> Battery Saver-> CPU Cooler
 
@@ -91,10 +90,10 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
     private val adClickedListener: () -> Unit = {
         //先销毁广告
         binding.layFrame.removeAllViews()
-        if (AdManager.adLoadCheck()) {
-//            adManager2?.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener2, 2)
-            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener2, 2)
-        }
+//        if (AdManager.adLoadCheck()) {
+////            adManager2?.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener2, 2)
+//            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener2, 2)
+//        }
     }
 
     private val adClickedListener2: () -> Unit = {
@@ -250,13 +249,13 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
 
     override fun onRestart() {
         super.onRestart()
-        if (AdManager.adLoadCheck()) {
-            //加载广告
-//            val adManager2 = AdManager2()
-//            this.adManager2 = adManager2
-//            adManager2.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
-            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
-        }
+//        if (AdManager.adLoadCheck()) {
+//            //加载广告
+////            val adManager2 = AdManager2()
+////            this.adManager2 = adManager2
+////            adManager2.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+//            AdManager.loadNativeAd(this, R.layout.cell_ad_native, adClickedListener, 2)
+//        }
     }
 
     override fun onStart() {
@@ -382,7 +381,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home) {
         binding.ivHomeOuterCircle.animation.cancel()
         //界面不可见   接收者置空
         //adManager2?.receiver = null
-        AdManager.remove(this)
+        //AdManager.remove(this)
     }
 
 
